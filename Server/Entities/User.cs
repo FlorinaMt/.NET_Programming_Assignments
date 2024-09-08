@@ -11,7 +11,7 @@ public class User
         }
         set
         {
-            if(value == null)
+            if(value is null)
                 throw new ArgumentException("The username cannot be empty.");
             username = value;
         }

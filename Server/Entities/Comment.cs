@@ -15,8 +15,9 @@ public class Comment
         }
         set
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentException("The comment cannot be empty.");
+            commentBody = value;
         }
     }
 }

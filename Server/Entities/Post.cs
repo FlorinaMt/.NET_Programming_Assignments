@@ -14,7 +14,7 @@ public class Post
         }
         set
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentException("The title cannot be empty.");
             title = value;
         }
@@ -27,7 +27,7 @@ public class Post
         }
         set
         {
-            if (value == null)
+            if (value is null)
                 throw new ArgumentException("The body cannot be empty.");
             body = value;
         }
