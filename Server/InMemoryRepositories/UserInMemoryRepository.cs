@@ -51,6 +51,12 @@ public class UserInMemoryRepository : IUserRepository
     public IQueryable<User> GetUsers()
     {
         return users.AsQueryable();
-
+    }
+    public string ToString()
+    {
+        string s = "";
+        for(int i=0; i<users.Count; i++)
+            s=s+users[i].ToString()+'\n';
+        return s;
     }
 }

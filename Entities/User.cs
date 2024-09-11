@@ -30,9 +30,4 @@ public class User
         }
         
     }
-
-    public string ToString()
-    {
-        return ($"Username = {Username}, Password = {Password}");
-    }
 }

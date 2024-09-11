@@ -32,8 +32,4 @@ public class Post
             body = value;
         }
     }
-    public string ToString()
-    {
-        return($"PostId = {PostId}, UserId = {UserId}, Title = {Title}, PostBody = {body}");
-    }
 }

@@ -9,4 +9,5 @@ public interface ILikeRepository
     Task<Like> GetLikeByIdAsync(int id);
     IQueryable<Like> GetLikesForPost(int postId);
     IQueryable<Like> GetAllLikes();
+    string ToString();
 }

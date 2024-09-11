@@ -67,4 +67,12 @@ public class CommentInMemoryRepository : ICommentRepository
     {
         return comments.AsQueryable();
     }
+
+    public string ToString()
+    {
+        string s = "";
+        for(int i=0; i<comments.Count; i++)
+            s=s+comments[i].ToString()+'\n';
+        return s;
+    }
 }

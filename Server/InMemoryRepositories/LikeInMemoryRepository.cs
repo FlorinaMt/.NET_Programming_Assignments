@@ -61,4 +61,11 @@ public class LikeInMemoryRepository:ILikeRepository
     {
         return likes.AsQueryable();
     }
+    public string ToString()
+    {
+        string s = "";
+        for(int i=0; i<likes.Count; i++)
+            s=s+likes[i].ToString()+'\n';
+        return s;
+    }
 }
