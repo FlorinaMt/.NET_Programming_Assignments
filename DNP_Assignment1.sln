@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNP_Assignment1", "DNP_Assignment1.csproj", "{A23AB79A-E892-45BC-B179-AD12521330D7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{08BB77F2-11A3-4140-9189-02C41C056DA1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Server\Entities\Entities.csproj", "{22FF98C6-7F6C-47D1-8E5A-6B64CE8501EF}"
@@ -16,10 +14,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A23AB79A-E892-45BC-B179-AD12521330D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A23AB79A-E892-45BC-B179-AD12521330D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A23AB79A-E892-45BC-B179-AD12521330D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A23AB79A-E892-45BC-B179-AD12521330D7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{22FF98C6-7F6C-47D1-8E5A-6B64CE8501EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{22FF98C6-7F6C-47D1-8E5A-6B64CE8501EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22FF98C6-7F6C-47D1-8E5A-6B64CE8501EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
