@@ -10,11 +10,11 @@ public class UserInMemoryRepository : IUserRepository
     public UserInMemoryRepository()
     {
         users = new List<User>();
-        users.Add(new User{Username = "betelgeuse", Password = "first_password"});
-        users.Add(new User{Username = "orion", Password = "second_password"});
-        users.Add(new User{Username = "rigel", Password = "third_password"});
-        users.Add(new User{Username = "bohr", Password = "fourth_password"});
-        users.Add(new User{Username = "faraday", Password = "fifth_password"});
+        AddUserAsync(new User{Username = "betelgeuse", Password = "first_password"});
+        AddUserAsync(new User{Username = "orion", Password = "second_password"});
+        AddUserAsync(new User{Username = "rigel", Password = "third_password"});
+        AddUserAsync(new User{Username = "bohr", Password = "fourth_password"});
+        AddUserAsync(new User{Username = "faraday", Password = "fifth_password"});
     }
     public Task<User> AddUserAsync(User user)
     {

@@ -10,13 +10,13 @@ public class CommentInMemoryRepository : ICommentRepository
     public CommentInMemoryRepository()
     {
         comments = new List<Comment>();
-        comments.Add(new Comment{CommentBody = "I won't miss it. Tak for det.", PostId = 1, UserId = 2});
-        comments.Add(new Comment{CommentBody = "I have DNP at that time, I won't see it, oh nej.", PostId = 1, UserId = 3});
-        comments.Add(new Comment{CommentBody = "DNP is interesting and I'm not saying this because other people are reading my comment. ", PostId = 2, UserId = 5});
-        comments.Add(new Comment{CommentBody = "I made you read my comment haha.", PostId = 3, UserId = 4});
-        comments.Add(new Comment{CommentBody = "Do you guys have a dad?", PostId = 4, UserId = 5});
-        comments.Add(new Comment{CommentBody = "I have 2 dads.", PostId = 4, UserId = 2});
-        comments.Add(new Comment{CommentBody = "Who cares?", PostId = 5, UserId = 4});
+        AddCommentAsync(new Comment{CommentBody = "I won't miss it. Tak for det.", PostId = 1, UserId = 2});
+        AddCommentAsync(new Comment{CommentBody = "I have DNP at that time, I won't see it, oh nej.", PostId = 1, UserId = 3});
+        AddCommentAsync(new Comment{CommentBody = "DNP is interesting and I'm not saying this because other people are reading my comment. ", PostId = 2, UserId = 5});
+        AddCommentAsync(new Comment{CommentBody = "I made you read my comment haha.", PostId = 3, UserId = 4});
+        AddCommentAsync(new Comment{CommentBody = "Do you guys have a dad?", PostId = 4, UserId = 5});
+        AddCommentAsync(new Comment{CommentBody = "I have 2 dads.", PostId = 4, UserId = 2});
+        AddCommentAsync(new Comment{CommentBody = "Who cares?", PostId = 5, UserId = 4});
     }
     
     public Task<Comment> AddCommentAsync(Comment comment)

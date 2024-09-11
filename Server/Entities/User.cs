@@ -26,7 +26,7 @@ public class User
         {
             if(value.Length<5)
                 throw new ArgumentException("The password is too short.");
-            username = value;
+            password = value;
         }
         
     }

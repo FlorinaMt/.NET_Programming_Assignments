@@ -10,11 +10,11 @@ public class PostInMemoryRepository : IPostRepository
     public PostInMemoryRepository()
     {
         posts = new List<Post>();
-        posts.Add(new Post{Title = "Solar eclipse today.", Body = "Don't miss today's solar eclipse at 15:37.", UserId = 1});
-        posts.Add(new Post{Title = "DNP Exam", Body = "No grade other than 12 is acceptable. Can we build it? Ja, selvfoelgelig!", UserId = 4});
-        posts.Add(new Post{Title = "Best supervisor at VIA.", Body = "Haha, got your attention.", UserId = 3});
-        posts.Add(new Post{Title = "Thread with dad jokes", Body = "Leave your best dad jokes in comments.", UserId = 2});
-        posts.Add(new Post{Title = "This is just another post.", Body = "It's Sunday, 20:57 and I'm tired. Oh nej.", UserId = 5});
+        AddPostAsync(new Post{Title = "Solar eclipse today.", Body = "Don't miss today's solar eclipse at 15:37.", UserId = 1});
+        AddPostAsync(new Post{Title = "DNP Exam", Body = "No grade other than 12 is acceptable. Can we build it? Ja, selvfoelgelig!", UserId = 4});
+        AddPostAsync(new Post{Title = "Best supervisor at VIA.", Body = "Haha, got your attention.", UserId = 3});
+        AddPostAsync(new Post{Title = "Thread with dad jokes", Body = "Leave your best dad jokes in comments.", UserId = 2});
+        AddPostAsync(new Post{Title = "This is just another post.", Body = "It's Sunday, 20:57 and I'm tired. Oh nej.", UserId = 5});
     }
     public Task<Post> AddPostAsync(Post post)
     {
