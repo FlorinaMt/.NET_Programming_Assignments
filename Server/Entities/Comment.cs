@@ -20,4 +20,9 @@ public class Comment
             commentBody = value;
         }
     }
+
+    public string ToString()
+    {
+        return($"CommentId = {CommentId}, UserId = {UserId}, PostId = {PostId}, CommentBody = {CommentBody}");
+    }
 }
