@@ -59,4 +59,9 @@ public class UserInMemoryRepository : IUserRepository
             s=s+users[i].ToString()+'\n';
         return s;
     }
+
+    public bool IsUsernameValid(string? username)
+    {
+        return !users.Any(u => u.Username == username);
+    }
 }

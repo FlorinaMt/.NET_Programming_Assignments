@@ -10,4 +10,5 @@ public interface IUserRepository
     Task <User> GetUserByIdAsync(int userId);
     IQueryable<User> GetUsers();
     string ToString();
+    bool IsUsernameValid(string username);
 }

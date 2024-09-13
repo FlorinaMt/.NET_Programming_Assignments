@@ -31,10 +31,6 @@ public class PostInMemoryRepository : IPostRepository
 
     public Task UpdatePostAsync(Post post)
     {
-        /*Post? existingPost =
-            posts.SingleOrDefault(p => p.PostId == post.PostId);
-        if(existingPost is null)
-            throw new InvalidOperationException($"No post with ID {post.PostId} found.");*/
         Post existingPost = GetPostByIdAsync(post.PostId).Result;
         posts.Remove(existingPost);
         posts.Add(post);
@@ -43,10 +39,6 @@ public class PostInMemoryRepository : IPostRepository
 
     public Task DeletePostAsync(int postId)
     {
-        /*Post? postToBeDeleted = posts.SingleOrDefault(p => p.PostId == postId);
-        if(postToBeDeleted is null)
-            throw new InvalidOperationException($"No post with ID {postId} found.");*/
-        
         Post postToBeDeleted = GetPostByIdAsync(postId).Result;
         posts.Remove(postToBeDeleted);
         return Task.CompletedTask;
