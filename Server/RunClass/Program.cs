@@ -12,7 +12,7 @@ public class Program
         ICommentRepository commentRepository = new CommentInMemoryRepository();
         IUserRepository userRepository = new UserInMemoryRepository();
         ILikeRepository likeRepository = new LikeInMemoryRepository();
-        
+         
         Console.WriteLine(postRepository.ToString());
         Console.WriteLine(commentRepository.ToString());
         Console.WriteLine(userRepository.ToString());
