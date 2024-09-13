@@ -32,6 +32,9 @@ public class LikeInMemoryRepository:ILikeRepository
     
     public Task<Like> AddLikeAsync(Like like)
     {
+        for(int i=0; i<likes.Count; i++)
+            if(likes[i].PostId == like.PostId && likes[i].UserId == like.UserId)
+                throw new InvalidOperationException("You cannot add likes more than once.");
         like.LikeId = likes.Any() ? likes.Max(l => l.LikeId) + 1 : 1;
         likes.Add(like);
         return Task.FromResult(like);

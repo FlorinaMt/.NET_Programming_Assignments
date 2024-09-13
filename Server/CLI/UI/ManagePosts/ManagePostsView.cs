@@ -5,7 +5,7 @@ namespace CLI.UI.ManagePosts;
 
 public class ManagePostsView
 {
-    public void Open(IPostRepository postRepository, User user, CliApp cliApp)
+    public void Open(IPostRepository postRepository, ICommentRepository commentRepository, ILikeRepository likeRepository, IUserRepository userRepository, User user, CliApp cliApp)
     {
         string? userInput;
         do
@@ -28,7 +28,7 @@ public class ManagePostsView
             }while(postId is null || postRepository.GetPostByIdAsync(int.Parse(postId)).Result == null);
 
             OpenedPostView openedPostView = new OpenedPostView();
-            openedPostView.Open(postRepository, user, cliApp);
+            openedPostView.Open(postRepository, commentRepository, likeRepository, userRepository, user, cliApp, int.Parse(postId));
         }
     }
 

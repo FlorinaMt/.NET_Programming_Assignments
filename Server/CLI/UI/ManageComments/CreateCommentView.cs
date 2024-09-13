@@ -2,5 +2,8 @@
 
 public class CreateCommentView
 {
-    
+    public void Open()
+    {
+        
+    }
 }

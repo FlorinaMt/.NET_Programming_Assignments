@@ -36,7 +36,7 @@ public class CliApp
     public Task LoadManagePostsView(User user)
     {
         ManagePostsView managePostsView = new ManagePostsView();
-        managePostsView.Open(postRepository, user, this);
+        managePostsView.Open(postRepository, commentRepository, likeRepository, userRepository, user, this);
         return Task.CompletedTask;
     }
 }
