@@ -11,10 +11,16 @@ public class PostInMemoryRepository : IPostRepository
     {
         posts = new List<Post>();
         AddPostAsync(new Post{Title = "Solar eclipse today.", Body = "Don't miss today's solar eclipse at 15:37.", UserId = 1});
-        AddPostAsync(new Post{Title = "DNP Exam", Body = "No grade other than 12 is acceptable. Can we build it? Ja, selvfoelgelig!", UserId = 4});
-        AddPostAsync(new Post{Title = "Best supervisor at VIA.", Body = "Haha, got your attention.", UserId = 3});
         AddPostAsync(new Post{Title = "Thread with dad jokes", Body = "Leave your best dad jokes in comments.", UserId = 2});
+        
+        AddPostAsync(new Post{Title = "Best supervisor at VIA.", Body = "Haha, got your attention.", UserId = 3});
+        AddPostAsync(new Post{Title = "Thread with favorite books:", Body = "Lad os begynde", UserId = 3});
+        
+        AddPostAsync(new Post{Title = "DNP Exam", Body = "No grade other than 12 is acceptable. Can we build it? Ja, selvfoelgelig!", UserId = 4});
         AddPostAsync(new Post{Title = "This is just another post.", Body = "It's Sunday, 20:57 and I'm tired. Oh nej.", UserId = 5});
+        AddPostAsync(new Post{Title = "Pain... pain everywhere", Body = "I'm in pain and Panodil doesn't help anymore. What should I do?", UserId = 5});
+        AddPostAsync(new Post{Title = "Is the water wet?", Body = "Tell me, please tell me. I need answers", UserId = 5});
+
     }
     public Task<Post> AddPostAsync(Post post)
     {

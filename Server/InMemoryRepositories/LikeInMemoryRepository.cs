@@ -12,17 +12,22 @@ public class LikeInMemoryRepository:ILikeRepository
         likes = new List<Like>();
         AddLikeAsync(new Like{PostId = 1, UserId = 2});
         AddLikeAsync(new Like{PostId = 1, UserId = 3});
-        AddLikeAsync(new Like{PostId = 2, UserId = 5});
-        AddLikeAsync(new Like{PostId = 3, UserId = 4});
-        AddLikeAsync(new Like{PostId = 4, UserId = 5});
-        AddLikeAsync(new Like{PostId = 4, UserId = 2});
-        AddLikeAsync(new Like{PostId = 5, UserId = 4});
-        AddLikeAsync(new Like{PostId = 4, UserId = 1});
-        AddLikeAsync(new Like{PostId = 4, UserId = 3});
-        AddLikeAsync(new Like{PostId = 5, UserId = 2});
-        AddLikeAsync(new Like{PostId = 5, UserId = 1});
-        AddLikeAsync(new Like{PostId = 2, UserId = 2});
         AddLikeAsync(new Like{PostId = 1, UserId = 4});
+
+        
+        AddLikeAsync(new Like{PostId = 2, UserId = 2});
+        AddLikeAsync(new Like{PostId = 2, UserId = 5});
+        
+        AddLikeAsync(new Like{PostId = 3, UserId = 4});
+        
+        AddLikeAsync(new Like{PostId = 4, UserId = 1});
+        AddLikeAsync(new Like{PostId = 4, UserId = 2}); 
+        AddLikeAsync(new Like{PostId = 4, UserId = 3});
+        AddLikeAsync(new Like{PostId = 4, UserId = 5});
+
+        AddLikeAsync(new Like{PostId = 5, UserId = 1});
+        AddLikeAsync(new Like{PostId = 5, UserId = 2});
+        AddLikeAsync(new Like{PostId = 5, UserId = 4});
     }
     
     public Task<Like> AddLikeAsync(Like like)
