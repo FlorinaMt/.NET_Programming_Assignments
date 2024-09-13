@@ -35,13 +35,13 @@ public class ManagePostsView
     private string? ChooseAction(IPostRepository postRepository)
     {
         DisplayPosts(postRepository);
-        Console.WriteLine("Choose 1 or 2:\n1. Create a post.\n2. Open a post.");
+        Console.WriteLine("Choose 1 or 2:\n1. Create a post.\n2. Open a post.\n");
         return Console.ReadLine();
     }
     private string? ChoosePost(IPostRepository postRepository)
     {
         DisplayPosts(postRepository);
-        Console.WriteLine("Choose 1 or 2:\n1. Create a post.\n2. Open a post.");
+        Console.WriteLine("Choose 1 or 2:\n1. Create a post.\n2. Open a post.\n");
         return Console.ReadLine();
     }
 

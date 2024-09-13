@@ -37,7 +37,7 @@ public class OpenedPostView
             else if (userInput.Equals("2"))
             {
                 CreateCommentView createCommentView = new CreateCommentView();
-                createCommentView.Open();
+                createCommentView.Open(commentRepository, user, postId);
             }
         } while (!userInput.Equals("3"));
     }
@@ -84,11 +84,11 @@ public class OpenedPostView
 
     public string Choose()
     {
-        Console.WriteLine(
-            "Choose 1, 2 or 3:\n1. Like post. \n2. Add comment\n3. Go back to all posts.");
         string? userInput;
         do
         {
+            Console.WriteLine(
+                        "Choose 1, 2 or 3:\n1. Like post. \n2. Add comment\n3. Go back to all posts.\n");
             userInput = Console.ReadLine();
         } while (userInput is null || (!userInput.Equals("1") &&
                                        !userInput.Equals("2") &&

@@ -11,13 +11,13 @@ public class CreatePostView
         string? title;
         do
         {
-            Console.WriteLine("Enter Post Title:");
+            Console.WriteLine("Enter Post Title:\n");
             title = Console.ReadLine();
         } while (title is null);
         string? body;
         do
         {
-            Console.WriteLine("Enter Post Body:");
+            Console.WriteLine("Enter Post Body:\n");
             body = Console.ReadLine();
         } while (body is null);
 

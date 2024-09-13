@@ -12,7 +12,7 @@ public class CreateUserView
         while (!userRepository.IsUsernameValid(username))
         {
             Console.WriteLine("Invalid username. Please try again.");
-            EnterUsername();
+            username = EnterUsername();
         }
 
         string? password = EnterPassword();
@@ -26,7 +26,7 @@ public class CreateUserView
                 Console.WriteLine(
                     $"User created successfully: \n Username: {username}\n Password: {password}");
                 created = true;
-                
+
                 cliApp.LoadManagePostsView(newUser);
             }
             catch (ArgumentException e)
@@ -37,17 +37,16 @@ public class CreateUserView
             }
         }
     }
-    
+
     private string? EnterUsername()
     {
-        Console.WriteLine("Enter username: ");
+        Console.WriteLine("Enter username:");
         return Console.ReadLine();
     }
-    
+
     private string? EnterPassword()
     {
-        Console.WriteLine("Enter password: ");
+        Console.WriteLine("Enter password:");
         return Console.ReadLine();
     }
-    
 }
