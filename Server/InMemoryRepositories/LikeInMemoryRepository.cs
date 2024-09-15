@@ -30,27 +30,29 @@ public class LikeInMemoryRepository:ILikeRepository
         AddLikeAsync(new Like{PostId = 5, UserId = 4});
     }
     
-    public Task<Like> AddLikeAsync(Like like)
+    public async Task<Like> AddLikeAsync(Like like)
     {
+        for(int i=0; i<likes.Count; i++)
+            if(likes[i].PostId == like.PostId && likes[i].UserId == like.UserId)
+                throw new InvalidOperationException("You cannot add likes more than once.");
         like.LikeId = likes.Any() ? likes.Max(l => l.LikeId) + 1 : 1;
         likes.Add(like);
-        return Task.FromResult(like);
+        return like;
     }
 
-    public Task DeleteLikeAsync(Like like)
+    public async Task DeleteLikeAsync(Like like)
     {
         Like likeToRemove = GetLikeByIdAsync(like.LikeId).Result;
         likes.Remove(likeToRemove);
-        return Task.CompletedTask;
     }
 
-    public Task<Like> GetLikeByIdAsync(int id)
+    public async Task<Like> GetLikeByIdAsync(int id)
     {
         Like? foundLike =
             likes.SingleOrDefault(l => l.LikeId == id);
         if(foundLike is null)
             throw new InvalidOperationException("No like found");
-        return Task.FromResult(foundLike);
+        return foundLike;
     }
 
     public IQueryable<Like> GetLikesForPost(int postId)
@@ -66,11 +68,5 @@ public class LikeInMemoryRepository:ILikeRepository
     {
         return likes.AsQueryable();
     }
-    public string ToString()
-    {
-        string s = "";
-        for(int i=0; i<likes.Count; i++)
-            s=s+likes[i].ToString()+'\n';
-        return s;
-    }
+
 }

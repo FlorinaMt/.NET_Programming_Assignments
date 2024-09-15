@@ -11,28 +11,20 @@ public class User
         }
         set
         {
-            if(value is null)
+            if(value is null || value.Trim().Equals(""))
                 throw new ArgumentException("The username cannot be empty.");
             username = value;
         }
     }
 
     public string Password { 
-        get
-        {
-            return password;
-        }
         set
         {
-            if(value.Length<5)
+            if(value.Length<5 || value.Trim().Equals(""))
                 throw new ArgumentException("The password is too short.");
             password = value;
         }
         
     }
 
-    public string ToString()
-    {
-        return ($"Username = {Username}, Password = {Password}");
-    }
 }

@@ -4,7 +4,7 @@ public class Post
 {
     public int PostId { get; set; }
     public int UserId { get; set; }
-    private string title, body;
+    private string? title, body;
 
     public string Title
     {
@@ -14,26 +14,20 @@ public class Post
         }
         set
         {
-            if (value is null)
+            if (value is null || value.Trim().Equals(""))
                 throw new ArgumentException("The title cannot be empty.");
             title = value;
         }
     }
 
     public string Body {
-        get
-        {
-            return body;
-        }
+        get => body;
         set
         {
-            if (value is null)
+            if (value is null || value.Trim().Equals(""))
                 throw new ArgumentException("The body cannot be empty.");
             body = value;
         }
     }
-    public string ToString()
-    {
-        return($"PostId = {PostId}, UserId = {UserId}, Title = {Title}, PostBody = {body}");
-    }
+  
 }
