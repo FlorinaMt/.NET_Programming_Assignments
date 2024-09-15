@@ -55,10 +55,7 @@ public class OpenedPostView
                 }
             }
             else if (userInput.Equals("2"))
-            {
-                CreateCommentView createCommentView = new CreateCommentView(commentRepository, user, postId, this);
-                createCommentView.Open();
-            }
+                Comment();
         } while (!userInput.Equals("3"));
 
         managePostsView.Open();
@@ -115,5 +112,16 @@ public class OpenedPostView
                                        !userInput.Equals("3")));
 
         return userInput;
+    }
+
+    private void LikePost()
+    {
+    }
+
+    private void Comment()
+    {
+        CreateCommentView createCommentView =
+            new CreateCommentView(commentRepository, user, postId, this);
+        createCommentView.Open();
     }
 }

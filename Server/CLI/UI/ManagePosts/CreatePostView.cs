@@ -25,13 +25,14 @@ public class CreatePostView
         {
             Console.WriteLine("Enter post title:");
             title = Console.ReadLine();
-        } while (title is null);
+        } while (title is null || title.Equals(""));
         string? body;
         do
         {
             Console.WriteLine("Enter post body:");
             body = Console.ReadLine();
-        } while (body is null);
+        } while (body is null || body.Equals(""));
+        
 
         postRepository.AddPostAsync(new Post { Title = title, Body = body, UserId = user.UserId});
         Console.WriteLine("Post created successfully.");

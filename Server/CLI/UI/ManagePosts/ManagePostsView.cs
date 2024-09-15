@@ -28,41 +28,13 @@ public class ManagePostsView
         do
         {
             userInput = ChooseAction();
-        } while (userInput is null ||
+        } while (userInput is null || 
                  (!userInput.Equals("1") && !userInput.Equals("2")));
 
         if (userInput.Equals("1"))
-        {
-            CreatePostView createPostView =
-                new CreatePostView(postRepository, user, this);
-            createPostView.Open();
-        }
+            GoToCreatePost();
         else
-        {
-            string? postId;
-            Post? foundPost;
-            string errorMessage = string.Empty;
-            do
-            {
-                postId = ChoosePost(errorMessage);
-                foundPost = null;
-                if (postId is not null)
-                {
-                    try
-                    {
-                        foundPost = postRepository
-                            .GetPostByIdAsync(int.Parse(postId)).Result;
-                    }
-                    catch (InvalidOperationException e)
-                    {
-                        errorMessage = $"ERROR: {e.Message} Try again.";
-                    }
-                }
-            } while (foundPost is null);
-
-            OpenedPostView openedPostView = new OpenedPostView(userRepository, postRepository, commentRepository, likeRepository, user, int.Parse(postId), this);
-            openedPostView.Open();
-        }
+            OpenPost();
     }
 
     private string? ChooseAction()
@@ -87,5 +59,43 @@ public class ManagePostsView
         for (int i = 0; i < postRepository.GetPosts().Count(); i++)
             Console.WriteLine(
                 $"   Post ID: {postRepository.GetPosts().ElementAt(i).PostId} \n{postRepository.GetPosts().ElementAt(i).Title}");
+    }
+
+    private void GoToCreatePost()
+    {
+        CreatePostView createPostView =
+            new CreatePostView(postRepository, user, this);
+        createPostView.Open();
+    }
+
+    private void OpenPost()
+    {
+        string? postId;
+        Post? foundPost;
+        string errorMessage = string.Empty;
+        do
+        {
+            postId = ChoosePost(errorMessage);
+            foundPost = null;
+            if (postId is not null)
+            {
+                try
+                {
+                    foundPost = postRepository
+                        .GetPostByIdAsync(int.Parse(postId)).Result;
+                }
+                catch (InvalidOperationException e)
+                {
+                    errorMessage = $"ERROR: {e.Message} Try again.";
+                }
+                catch (FormatException)
+                {
+                    errorMessage = "Invalid ID.";
+                }
+            }
+        } while (foundPost is null);
+
+        OpenedPostView openedPostView = new OpenedPostView(userRepository, postRepository, commentRepository, likeRepository, user, int.Parse(postId), this);
+        openedPostView.Open();
     }
 }

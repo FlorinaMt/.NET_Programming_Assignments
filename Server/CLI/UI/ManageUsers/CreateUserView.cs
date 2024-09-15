@@ -43,7 +43,6 @@ public class CreateUserView
                 
                 ManagePostsView managePostsView = new ManagePostsView(userRepository, postRepository, commentRepository, likeRepository, newUser);
                 managePostsView.Open();
-                //return Task.CompletedTask;
             }
             catch (ArgumentException e)
             {

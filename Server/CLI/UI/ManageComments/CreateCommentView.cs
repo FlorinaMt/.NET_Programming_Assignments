@@ -24,7 +24,7 @@ public class CreateCommentView
         {
             Console.WriteLine("Enter comment text:");
             userInput = Console.ReadLine();
-        } while (userInput is null);
+        } while (userInput is null || userInput.Equals(""));
         commentRepository.AddCommentAsync(new Comment{CommentBody = userInput, UserId = user.UserId, PostId = postId});
         openedPostView.Open();
     }

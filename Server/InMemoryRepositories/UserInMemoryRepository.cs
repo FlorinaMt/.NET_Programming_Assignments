@@ -55,6 +55,6 @@ public class UserInMemoryRepository : IUserRepository
 
     public bool IsUsernameValid(string? username)
     {
-        return !users.Any(u => u.Username == username);
+        return username is not null && !users.Any(u => u.Username == username);
     }
 }
