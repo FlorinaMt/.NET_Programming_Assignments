@@ -7,8 +7,8 @@ namespace CLI.UI.ManagePosts;
 public class CreatePostView
 {
     private IPostRepository postRepository;
-    private User user;
     private ManagePostsView managePostsView;
+    private User user;
 
     public CreatePostView(IPostRepository postRepository, User user,
         ManagePostsView managePostsView)
@@ -20,25 +20,41 @@ public class CreatePostView
 
     public async Task OpenAsync()
     {
-        string? title;
-        do
+        Post post = new Post{ Title = "1", Body = "1", UserId = user.UserId };
+        bool updated = false;
+        while (updated is false)
         {
-            Console.WriteLine("Enter post title:");
-            title = Console.ReadLine();
-        } while (title is null || title.Trim().Equals(""));
+            try
+            {
+                Console.WriteLine("Enter post title:");
+                post.Title = Console.ReadLine();
+                updated = true;
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
 
-        string? body;
-        do
+        updated = false;
+        while (updated is false)
         {
-            Console.WriteLine("Enter post body:");
-            body = Console.ReadLine();
-        } while (body is null || body.Trim().Equals(""));
+            try
+            {
+                Console.WriteLine("Enter post body:");
+                post.Body = Console.ReadLine();
+                updated = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
 
-
-        await postRepository.AddPostAsync(new Post
-            { Title = title, Body = body, UserId = user.UserId });
+        await postRepository.AddPostAsync(post);
         Console.WriteLine("Post created successfully.");
 
         await managePostsView.OpenAsync();
+
     }
 }

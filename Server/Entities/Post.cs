@@ -14,7 +14,7 @@ public class Post
         }
         set
         {
-            if (value is null)
+            if (value is null || value.Trim().Equals(""))
                 throw new ArgumentException("The title cannot be empty.");
             title = value;
         }
@@ -24,7 +24,7 @@ public class Post
         get => body;
         set
         {
-            if (value is null)
+            if (value is null || value.Trim().Equals(""))
                 throw new ArgumentException("The body cannot be empty.");
             body = value;
         }

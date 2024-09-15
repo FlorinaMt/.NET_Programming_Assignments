@@ -78,21 +78,19 @@ public class ManagePostsView
         {
             string? postId = ChoosePost(errorMessage);
             foundPost = null;
-            if (postId is not null)
+
+            try
             {
-                try
-                {
-                    foundPost = await postRepository
-                        .GetPostByIdAsync(int.Parse(postId));
-                }
-                catch (InvalidOperationException e)
-                {
-                    errorMessage = $"ERROR: {e.Message} Try again.";
-                }
-                catch (FormatException)
-                {
-                    errorMessage = "Invalid ID.";
-                }
+                foundPost = await postRepository
+                    .GetPostByIdAsync(int.Parse(postId));
+            }
+            catch (InvalidOperationException e)
+            {
+                errorMessage = e.Message;
+            }
+            catch (FormatException)
+            {
+                errorMessage = "Invalid ID.";
             }
         } while (foundPost is null);
 

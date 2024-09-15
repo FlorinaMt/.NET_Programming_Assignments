@@ -12,7 +12,7 @@ public class Comment
         get => commentBody;
         set
         {
-            if (value is null)
+            if (value is null || value.Trim().Equals(""))
                 throw new ArgumentException("The comment cannot be empty.");
             commentBody = value;
         }

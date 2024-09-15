@@ -7,9 +7,10 @@ namespace CLI.UI.ManageComments;
 public class CreateCommentView
 {
     private ICommentRepository commentRepository;
+    private OpenedPostView openedPostView;
+
     private User user;
     private int postId;
-    private OpenedPostView openedPostView;
 
     public CreateCommentView(ICommentRepository commentRepository, User user,
         int postId, OpenedPostView openedPostView)
@@ -22,15 +23,27 @@ public class CreateCommentView
 
     public async Task OpenAsync()
     {
-        string? userInput;
-        do
+        bool created = false;
+        while (created is false)
         {
-            Console.WriteLine("Enter comment text:");
-            userInput = Console.ReadLine();
-        } while (userInput is null || userInput.Trim().Equals(""));
+            try
+            {
+                Console.WriteLine("Enter comment text:");
+                string? userInput = Console.ReadLine();
 
-        await commentRepository.AddCommentAsync(new Comment
-            { CommentBody = userInput, UserId = user.UserId, PostId = postId });
+                await commentRepository.AddCommentAsync(new Comment
+                {
+                    CommentBody = userInput, UserId = user.UserId,
+                    PostId = postId
+                });
+                created = true;
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
         await openedPostView.OpenAsync();
     }
 }
