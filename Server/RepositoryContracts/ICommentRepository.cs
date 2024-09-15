@@ -10,5 +10,4 @@ public interface ICommentRepository
     Task<Comment> GetCommentByIdAsync(int id);
     IQueryable<Comment> GetCommentsForPost(int postId);
     IQueryable<Comment> GetAllComments();
-    string ToString();
 }

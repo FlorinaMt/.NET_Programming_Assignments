@@ -9,6 +9,5 @@ public interface IUserRepository
     Task DeleteUserAsync(int userId);
     Task <User> GetUserByIdAsync(int userId);
     IQueryable<User> GetUsers();
-    string ToString();
     bool IsUsernameValid(string username);
 }

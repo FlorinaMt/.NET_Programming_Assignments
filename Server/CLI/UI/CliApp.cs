@@ -20,6 +20,7 @@ public class CliApp
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.likeRepository = likeRepository;
+        LoadManageUsersView();
     }
 
     public Task StartAsync()
@@ -27,16 +28,10 @@ public class CliApp
         return LoadManageUsersView();
     }
 
-    public Task LoadManageUsersView()
+    private Task LoadManageUsersView()
     {
-        ManageUsersView manageUsersView = new ManageUsersView();
-        manageUsersView.Open(userRepository, this);
-        return Task.CompletedTask;
-    }
-    public Task LoadManagePostsView(User user)
-    {
-        ManagePostsView managePostsView = new ManagePostsView();
-        managePostsView.Open(postRepository, commentRepository, likeRepository, userRepository, user, this);
+        ManageUsersView manageUsersView = new ManageUsersView(userRepository, postRepository, commentRepository, likeRepository);
+        manageUsersView.Open();
         return Task.CompletedTask;
     }
 }

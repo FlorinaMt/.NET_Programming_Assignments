@@ -21,8 +21,4 @@ public class Comment
         }
     }
 
-    public string ToString()
-    {
-        return($"CommentId = {CommentId}, UserId = {UserId}, PostId = {PostId}, CommentBody = {CommentBody}");
-    }
 }

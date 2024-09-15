@@ -5,7 +5,22 @@ namespace CLI.UI.ManageUsers;
 
 public class ManageUsersView
 {
-    public void Open(IUserRepository userRepository, CliApp cliApp)
+    private IUserRepository userRepository;
+    private ICommentRepository commentRepository;
+    private IPostRepository postRepository;
+    private ILikeRepository likeRepository;
+
+    public ManageUsersView(IUserRepository userRepository,
+        IPostRepository postRepository, ICommentRepository commentRepository,
+        ILikeRepository likeRepository)
+    {
+        this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
+        this.likeRepository = likeRepository;
+    }
+    
+    public void Open()
     {
         string? userInput = Choose();
 
@@ -18,19 +33,19 @@ public class ManageUsersView
 
         if (userInput.Equals("1"))
         {
-            CreateUserView createUserView = new CreateUserView();
-            createUserView.Open(userRepository, cliApp);
+            CreateUserView createUserView = new CreateUserView(userRepository, postRepository, commentRepository, likeRepository);
+            createUserView.Open();
         }
         else if (userInput.Equals("2"))
         {
-            UserListView userListView = new UserListView();
-            userListView.Open(userRepository, cliApp);
+            UserListView userListView = new UserListView(userRepository, this);
+            userListView.Open();
         }
     }
 
     private string? Choose()
     {
-        Console.Write("Choose 1 or 2: \n1. Create user. \n2. See users' list.");
+        Console.WriteLine("Choose 1 or 2: \n1. Create user. \n2. See users' list.");
         return Console.ReadLine();
     }
 }

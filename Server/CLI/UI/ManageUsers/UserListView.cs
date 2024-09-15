@@ -4,7 +4,16 @@ namespace CLI.UI.ManageUsers;
 
 public class UserListView
 {
-    public void Open(IUserRepository userRepository, CliApp cliApp)
+    private IUserRepository userRepository;
+    private ManageUsersView manageUsersView;
+
+    public UserListView(IUserRepository userRepository,
+        ManageUsersView manageUsersView)
+    {
+        this.userRepository = userRepository;
+        this.manageUsersView = manageUsersView;
+    }
+    public void Open()
     {
         Console.WriteLine("The list of users:");
         for(int i=0; i<userRepository.GetUsers().Count(); i++)
@@ -15,7 +24,7 @@ public class UserListView
         {
             userInput = GoBackToManageUsersView();
         } while (userInput is null || !userInput.Equals("x"));
-        cliApp.LoadManageUsersView();
+        manageUsersView.Open();
     }
 
     private string? GoBackToManageUsersView()

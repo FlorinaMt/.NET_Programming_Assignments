@@ -6,7 +6,21 @@ namespace CLI.UI.ManageUsers;
 
 public class CreateUserView
 {
-    public void Open(IUserRepository userRepository, CliApp cliApp)
+    private IUserRepository userRepository;
+    private ICommentRepository commentRepository;
+    private IPostRepository postRepository;
+    private ILikeRepository likeRepository;
+    
+    public CreateUserView(IUserRepository userRepository,
+        IPostRepository postRepository, ICommentRepository commentRepository,
+        ILikeRepository likeRepository)
+    {
+        this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
+        this.likeRepository = likeRepository;
+    }
+    public void Open()
     {
         string? username = EnterUsername();
         while (!userRepository.IsUsernameValid(username))
@@ -24,15 +38,16 @@ public class CreateUserView
                 User newUser = userRepository.AddUserAsync(new User
                     { Username = username, Password = password }).Result;
                 Console.WriteLine(
-                    $"User created successfully: \n Username: {username}\n Password: {password}");
+                    $"\nUser created successfully: \n   Username: {username}\n   Password: {password}");
                 created = true;
-
-                cliApp.LoadManagePostsView(newUser);
+                
+                ManagePostsView managePostsView = new ManagePostsView(userRepository, postRepository, commentRepository, likeRepository, newUser);
+                managePostsView.Open();
+                //return Task.CompletedTask;
             }
             catch (ArgumentException e)
             {
                 Console.WriteLine(e.Message);
-                username = EnterUsername();
                 password = EnterPassword();
             }
         }

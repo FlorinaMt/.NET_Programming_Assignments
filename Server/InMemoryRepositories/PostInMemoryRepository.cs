@@ -56,11 +56,5 @@ public class PostInMemoryRepository : IPostRepository
     {
         return posts.AsQueryable();
     }
-    public string ToString()
-    {
-        string s = "";
-        for(int i=0; i<posts.Count; i++)
-            s=s+posts[i].ToString()+'\n';
-        return s;
-    }
+
 }

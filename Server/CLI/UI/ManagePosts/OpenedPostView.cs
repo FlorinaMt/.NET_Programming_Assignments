@@ -6,14 +6,35 @@ namespace CLI.UI.ManagePosts;
 
 public class OpenedPostView
 {
-    public void Open(IPostRepository postRepository,
-        ICommentRepository commentRepository, ILikeRepository likeRepository,
-        IUserRepository userRepository, User user, CliApp cliApp, int postId)
+    private IUserRepository userRepository;
+    private ICommentRepository commentRepository;
+    private IPostRepository postRepository;
+    private ILikeRepository likeRepository;
+
+    private ManagePostsView managePostsView;
+    private User user;
+    private int postId;
+
+    public OpenedPostView(IUserRepository userRepository,
+        IPostRepository postRepository, ICommentRepository commentRepository,
+        ILikeRepository likeRepository, User user, int postId,
+        ManagePostsView managePostsView)
+    {
+        this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
+        this.likeRepository = likeRepository;
+
+        this.user = user;
+        this.postId = postId;
+        this.managePostsView = managePostsView;
+    }
+
+    public void Open()
     {
         Post post = postRepository.GetPostByIdAsync(postId).Result;
 
-        DisplayCompletePost(post, likeRepository, commentRepository,
-            userRepository);
+        DisplayCompletePost(post);
 
         string userInput = Choose();
 
@@ -25,8 +46,7 @@ public class OpenedPostView
                 {
                     likeRepository.AddLikeAsync(new Like
                         { UserId = user.UserId, PostId = postId });
-                    DisplayCompletePost(post, likeRepository, commentRepository,
-                        userRepository);
+                    DisplayCompletePost(post);
                 }
                 catch (InvalidOperationException e)
                 {
@@ -36,27 +56,28 @@ public class OpenedPostView
             }
             else if (userInput.Equals("2"))
             {
-                CreateCommentView createCommentView = new CreateCommentView();
-                createCommentView.Open(commentRepository, user, postId);
+                CreateCommentView createCommentView = new CreateCommentView(commentRepository, user, postId, this);
+                createCommentView.Open();
             }
         } while (!userInput.Equals("3"));
+
+        managePostsView.Open();
     }
 
-    private void DisplayCompletePost(Post post, ILikeRepository likeRepository,
-        ICommentRepository commentRepository, IUserRepository userRepository)
+    private void DisplayCompletePost(Post post)
     {
         Console.WriteLine(
             $"Post ID: {post.PostId}\n {post.Title}\n{post.Body}");
-        DisplayLikes(likeRepository, post.PostId);
-        DisplayComments(commentRepository, userRepository, post.PostId);
+        DisplayLikes();
+        DisplayComments();
     }
 
-    private void DisplayLikes(ILikeRepository likeRepository, int postId)
+    private void DisplayLikes()
     {
         try
         {
             Console.WriteLine(
-                $"Likes: {likeRepository.GetLikesForPost(postId).Count()}");
+                $"\nLikes: {likeRepository.GetLikesForPost(postId).Count()}");
         }
         catch (InvalidOperationException e)
         {
@@ -64,17 +85,16 @@ public class OpenedPostView
         }
     }
 
-    private void DisplayComments(ICommentRepository commentRepository,
-        IUserRepository userRepository, int postId)
+    private void DisplayComments()
     {
         try
         {
-            Console.WriteLine("Comments:");
+            Console.WriteLine("\nComments:");
             for (int i = 0;
                  i < commentRepository.GetCommentsForPost(postId).Count();
                  i++)
                 Console.WriteLine(
-                    $"{userRepository.GetUserByIdAsync(commentRepository.GetCommentsForPost(postId).ElementAt(i).UserId)}:\n {commentRepository.GetCommentsForPost(postId).ElementAt(i).CommentBody}");
+                    $"{userRepository.GetUserByIdAsync(commentRepository.GetCommentsForPost(postId).ElementAt(i).UserId).Result.Username}:\n   {commentRepository.GetCommentsForPost(postId).ElementAt(i).CommentBody}");
         }
         catch (InvalidOperationException e)
         {
@@ -88,7 +108,7 @@ public class OpenedPostView
         do
         {
             Console.WriteLine(
-                        "Choose 1, 2 or 3:\n1. Like post. \n2. Add comment\n3. Go back to all posts.\n");
+                "\nChoose 1, 2 or 3:\n1. Like post. \n2. Add comment\n3. Go back to all posts.");
             userInput = Console.ReadLine();
         } while (userInput is null || (!userInput.Equals("1") &&
                                        !userInput.Equals("2") &&

@@ -52,13 +52,6 @@ public class UserInMemoryRepository : IUserRepository
     {
         return users.AsQueryable();
     }
-    public string ToString()
-    {
-        string s = "";
-        for(int i=0; i<users.Count; i++)
-            s=s+users[i].ToString()+'\n';
-        return s;
-    }
 
     public bool IsUsernameValid(string? username)
     {
