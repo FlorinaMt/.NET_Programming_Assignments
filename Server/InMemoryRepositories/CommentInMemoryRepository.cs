@@ -39,36 +39,34 @@ public class CommentInMemoryRepository : ICommentRepository
         AddCommentAsync(new Comment{CommentBody = "Water might not be wet. This is because most scientists define wetness as a liquid’s ability to maintain contact with a solid surface, meaning that water itself is not wet, but can make other objects wet.", PostId = 8, UserId = 4});
     }
     
-    public Task<Comment> AddCommentAsync(Comment comment)
+    public async Task<Comment> AddCommentAsync(Comment comment)
     {
         comment.CommentId =
             comments.Any() ? comments.Max(c => c.CommentId) + 1 : 1;
         comments.Add(comment);
-        return Task.FromResult(comment);
+        return comment;
     }
 
-    public Task UpdateCommentAsync(Comment comment)
+    public async Task UpdateCommentAsync(Comment comment)
     {
         Comment commentToUpdate = GetCommentByIdAsync(comment.CommentId).Result;
         comments.Remove(commentToUpdate);
         comments.Add(comment);
-        return Task.CompletedTask;
     }
 
-    public Task DeleteCommentAsync(int commentId)
+    public async Task DeleteCommentAsync(int commentId)
     {
         Comment commentToDelete = GetCommentByIdAsync(commentId).Result;
         comments.Remove(commentToDelete);
-        return Task.CompletedTask;
     }
 
-    public Task<Comment> GetCommentByIdAsync(int id)
+    public async Task<Comment> GetCommentByIdAsync(int id)
     {
         Comment? foundComment =
             comments.SingleOrDefault(c => c.CommentId == id);
         if(foundComment is null)
             throw new InvalidOperationException("No comment found");
-        return Task.FromResult(foundComment);
+        return foundComment;
     }
 
     public IQueryable<Comment> GetCommentsForPost(int postId)

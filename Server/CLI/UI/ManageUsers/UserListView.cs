@@ -13,10 +13,10 @@ public class UserListView
         this.userRepository = userRepository;
         this.manageUsersView = manageUsersView;
     }
-    public void Open()
+    public async Task OpenAsync()
     {
         Console.WriteLine("The list of users:");
-        for(int i=0; i<userRepository.GetUsers().Count(); i++)
+        for(var i=0; i<userRepository.GetUsers().Count(); i++)
          Console.WriteLine(userRepository.GetUsers().ElementAt(i).Username);
 
         string? userInput;
@@ -24,7 +24,7 @@ public class UserListView
         {
             userInput = GoBackToManageUsersView();
         } while (userInput is null || !userInput.Equals("x"));
-        manageUsersView.Open();
+        await manageUsersView.OpenAsync();
     }
 
     private string? GoBackToManageUsersView()

@@ -4,7 +4,7 @@ public class Post
 {
     public int PostId { get; set; }
     public int UserId { get; set; }
-    private string title, body;
+    private string? title, body;
 
     public string Title
     {
@@ -21,10 +21,7 @@ public class Post
     }
 
     public string Body {
-        get
-        {
-            return body;
-        }
+        get => body;
         set
         {
             if (value is null)

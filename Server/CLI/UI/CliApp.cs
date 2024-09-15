@@ -31,7 +31,7 @@ public class CliApp
     private Task LoadManageUsersView()
     {
         ManageUsersView manageUsersView = new ManageUsersView(userRepository, postRepository, commentRepository, likeRepository);
-        manageUsersView.Open();
+        manageUsersView.OpenAsync();
         return Task.CompletedTask;
     }
 }

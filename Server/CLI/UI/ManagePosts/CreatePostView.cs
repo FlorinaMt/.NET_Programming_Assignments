@@ -9,7 +9,7 @@ public class CreatePostView
     private IPostRepository postRepository;
     private User user;
     private ManagePostsView managePostsView;
-    
+
     public CreatePostView(IPostRepository postRepository, User user,
         ManagePostsView managePostsView)
     {
@@ -17,26 +17,28 @@ public class CreatePostView
         this.user = user;
         this.managePostsView = managePostsView;
     }
-    
-    public void Open()
+
+    public async Task OpenAsync()
     {
         string? title;
         do
         {
             Console.WriteLine("Enter post title:");
             title = Console.ReadLine();
-        } while (title is null || title.Equals(""));
+        } while (title is null || title.Trim().Equals(""));
+
         string? body;
         do
         {
             Console.WriteLine("Enter post body:");
             body = Console.ReadLine();
-        } while (body is null || body.Equals(""));
-        
+        } while (body is null || body.Trim().Equals(""));
 
-        postRepository.AddPostAsync(new Post { Title = title, Body = body, UserId = user.UserId});
+
+        await postRepository.AddPostAsync(new Post
+            { Title = title, Body = body, UserId = user.UserId });
         Console.WriteLine("Post created successfully.");
 
-        managePostsView.Open();
+        await managePostsView.OpenAsync();
     }
 }

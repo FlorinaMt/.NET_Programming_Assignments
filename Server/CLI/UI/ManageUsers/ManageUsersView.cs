@@ -20,7 +20,7 @@ public class ManageUsersView
         this.likeRepository = likeRepository;
     }
     
-    public void Open()
+    public async Task OpenAsync()
     {
         string? userInput = Choose();
 
@@ -34,18 +34,18 @@ public class ManageUsersView
         if (userInput.Equals("1"))
         {
             CreateUserView createUserView = new CreateUserView(userRepository, postRepository, commentRepository, likeRepository);
-            createUserView.Open();
+            await createUserView.OpenAsync();
         }
         else if (userInput.Equals("2"))
         {
             UserListView userListView = new UserListView(userRepository, this);
-            userListView.Open();
+            await userListView.OpenAsync();
         }
     }
 
     private string? Choose()
     {
-        Console.WriteLine("Choose 1 or 2: \n1. Create user. \n2. See users' list.");
+        Console.WriteLine("Choose 1 or 2: \n1. Create user. \n2. See the list of users.");
         return Console.ReadLine();
     }
 }

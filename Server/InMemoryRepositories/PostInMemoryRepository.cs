@@ -22,34 +22,32 @@ public class PostInMemoryRepository : IPostRepository
         AddPostAsync(new Post{Title = "Is the water wet?", Body = "Tell me, please tell me. I need answers", UserId = 5});
 
     }
-    public Task<Post> AddPostAsync(Post post)
+    public async Task<Post> AddPostAsync(Post post)
     {
         post.PostId = posts.Any() ? posts.Max(p => p.PostId) + 1 : 1;
         posts.Add(post);
-        return Task.FromResult(post);
+        return post;
     }
 
-    public Task UpdatePostAsync(Post post)
+    public async Task UpdatePostAsync(Post post)
     {
         Post existingPost = GetPostByIdAsync(post.PostId).Result;
         posts.Remove(existingPost);
         posts.Add(post);
-        return Task.CompletedTask;
     }
 
-    public Task DeletePostAsync(int postId)
+    public async Task DeletePostAsync(int postId)
     {
         Post postToBeDeleted = GetPostByIdAsync(postId).Result;
         posts.Remove(postToBeDeleted);
-        return Task.CompletedTask;
     }
 
-    public Task<Post> GetPostByIdAsync(int postId)
+    public async Task<Post> GetPostByIdAsync(int postId)
     {
         Post? foundPost = posts.SingleOrDefault(p => p.PostId == postId);
         if(foundPost is null)
             throw new InvalidOperationException($"No post with ID {postId} found.");
-        return Task.FromResult(foundPost);
+        return foundPost;
     }
 
     public IQueryable<Post> GetPosts()

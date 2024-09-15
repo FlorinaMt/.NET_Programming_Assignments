@@ -5,14 +5,11 @@ public class Comment
     public int CommentId { get; set; }
     public int UserId { get; set; }
     public int PostId { get; set; }
-    private string commentBody;
+    private string? commentBody;
 
     public string CommentBody
     {
-        get
-        {
-            return commentBody;
-        }
+        get => commentBody;
         set
         {
             if (value is null)

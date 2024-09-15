@@ -11,8 +11,9 @@ public class ManagePostsView
     private IPostRepository postRepository;
     private ILikeRepository likeRepository;
     private User user;
-    
-    public ManagePostsView(IUserRepository userRepository, IPostRepository postRepository,
+
+    public ManagePostsView(IUserRepository userRepository,
+        IPostRepository postRepository,
         ICommentRepository commentRepository,
         ILikeRepository likeRepository, User user)
     {
@@ -22,19 +23,20 @@ public class ManagePostsView
         this.likeRepository = likeRepository;
         this.user = user;
     }
-    public void Open()
+
+    public async Task OpenAsync()
     {
         string? userInput;
         do
         {
             userInput = ChooseAction();
-        } while (userInput is null || 
+        } while (userInput is null ||
                  (!userInput.Equals("1") && !userInput.Equals("2")));
 
         if (userInput.Equals("1"))
-            GoToCreatePost();
+            await GoToCreatePostAsync();
         else
-            OpenPost();
+            await OpenPostAsync();
     }
 
     private string? ChooseAction()
@@ -55,34 +57,33 @@ public class ManagePostsView
 
     private void DisplayPosts()
     {
-        Console.WriteLine("\n\nPosts:");
-        for (int i = 0; i < postRepository.GetPosts().Count(); i++)
+        Console.WriteLine("\n\nPosts:\n");
+        for (var i = 0; i < postRepository.GetPosts().Count(); i++)
             Console.WriteLine(
-                $"   Post ID: {postRepository.GetPosts().ElementAt(i).PostId} \n{postRepository.GetPosts().ElementAt(i).Title}");
+                $"   Post ID: {postRepository.GetPosts().ElementAt(i).PostId} \n{postRepository.GetPosts().ElementAt(i).Title}\n");
     }
 
-    private void GoToCreatePost()
+    private async Task GoToCreatePostAsync()
     {
         CreatePostView createPostView =
             new CreatePostView(postRepository, user, this);
-        createPostView.Open();
+        await createPostView.OpenAsync();
     }
 
-    private void OpenPost()
+    private async Task OpenPostAsync()
     {
-        string? postId;
         Post? foundPost;
         string errorMessage = string.Empty;
         do
         {
-            postId = ChoosePost(errorMessage);
+            string? postId = ChoosePost(errorMessage);
             foundPost = null;
             if (postId is not null)
             {
                 try
                 {
-                    foundPost = postRepository
-                        .GetPostByIdAsync(int.Parse(postId)).Result;
+                    foundPost = await postRepository
+                        .GetPostByIdAsync(int.Parse(postId));
                 }
                 catch (InvalidOperationException e)
                 {
@@ -95,7 +96,9 @@ public class ManagePostsView
             }
         } while (foundPost is null);
 
-        OpenedPostView openedPostView = new OpenedPostView(userRepository, postRepository, commentRepository, likeRepository, user, int.Parse(postId), this);
-        openedPostView.Open();
+        OpenedPostView openedPostView = new OpenedPostView(userRepository,
+            commentRepository, likeRepository, user, foundPost,
+            this);
+        await openedPostView.OpenAsync();
     }
 }

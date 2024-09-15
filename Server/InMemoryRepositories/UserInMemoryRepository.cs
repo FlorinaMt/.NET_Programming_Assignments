@@ -16,36 +16,34 @@ public class UserInMemoryRepository : IUserRepository
         AddUserAsync(new User{Username = "bohr", Password = "fourth_password"});
         AddUserAsync(new User{Username = "faraday", Password = "fifth_password"});
     }
-    public Task<User> AddUserAsync(User user)
+    public async Task<User> AddUserAsync(User user)
     {
         user.UserId = users.Any() ? users.Max(u => u.UserId) + 1 : 1;
         users.Add(user);
-        return Task.FromResult(user);
+        return user;
     }
 
-    public Task UpdateUserAsync(User user)
+    public async Task UpdateUserAsync(User user)
     {
         User userToUpdate = GetUserByIdAsync(user.UserId).Result;
         
         users.Remove(userToUpdate);
         users.Add(user);
-        return Task.CompletedTask;
     }
 
-    public Task DeleteUserAsync(int userId)
+    public async Task DeleteUserAsync(int userId)
     {
         User userToDelete = GetUserByIdAsync(userId).Result;
         users.Remove(userToDelete);
-        return Task.CompletedTask;
 
     }
 
-    public Task<User> GetUserByIdAsync(int userId)
+    public async Task<User> GetUserByIdAsync(int userId)
     {
         User? foundUser = users.FirstOrDefault(u => u.UserId == userId);
         if (foundUser is null)
             throw new InvalidOperationException($"No user with ID {userId} found.");
-        return Task.FromResult(foundUser);
+        return foundUser;
     }
 
     public IQueryable<User> GetUsers()
@@ -53,8 +51,8 @@ public class UserInMemoryRepository : IUserRepository
         return users.AsQueryable();
     }
 
-    public bool IsUsernameValid(string? username)
+    public async Task<bool> IsUsernameValidAsync(string? username)
     {
-        return username is not null && !users.Any(u => u.Username == username);
+        return username is not null && !username.Trim().Equals("") && !users.Any(u => u.Username == username);
     }
 }

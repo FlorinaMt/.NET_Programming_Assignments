@@ -10,22 +10,27 @@ public class CreateCommentView
     private User user;
     private int postId;
     private OpenedPostView openedPostView;
-    public CreateCommentView(ICommentRepository commentRepository, User user, int postId, OpenedPostView openedPostView)
+
+    public CreateCommentView(ICommentRepository commentRepository, User user,
+        int postId, OpenedPostView openedPostView)
     {
         this.commentRepository = commentRepository;
         this.user = user;
         this.postId = postId;
         this.openedPostView = openedPostView;
     }
-    public void Open()
+
+    public async Task OpenAsync()
     {
         string? userInput;
         do
         {
             Console.WriteLine("Enter comment text:");
             userInput = Console.ReadLine();
-        } while (userInput is null || userInput.Equals(""));
-        commentRepository.AddCommentAsync(new Comment{CommentBody = userInput, UserId = user.UserId, PostId = postId});
-        openedPostView.Open();
+        } while (userInput is null || userInput.Trim().Equals(""));
+
+        await commentRepository.AddCommentAsync(new Comment
+            { CommentBody = userInput, UserId = user.UserId, PostId = postId });
+        await openedPostView.OpenAsync();
     }
 }

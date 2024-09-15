@@ -20,10 +20,10 @@ public class CreateUserView
         this.postRepository = postRepository;
         this.likeRepository = likeRepository;
     }
-    public void Open()
+    public async Task OpenAsync()
     {
         string? username = EnterUsername();
-        while (!userRepository.IsUsernameValid(username))
+        while (! await userRepository.IsUsernameValidAsync(username))
         {
             Console.WriteLine("Invalid username. Please try again.");
             username = EnterUsername();
@@ -35,14 +35,14 @@ public class CreateUserView
         {
             try
             {
-                User newUser = userRepository.AddUserAsync(new User
-                    { Username = username, Password = password }).Result;
+                User newUser = await userRepository.AddUserAsync(new User
+                    { Username = username, Password = password });
                 Console.WriteLine(
                     $"\nUser created successfully: \n   Username: {username}\n   Password: {password}");
                 created = true;
                 
                 ManagePostsView managePostsView = new ManagePostsView(userRepository, postRepository, commentRepository, likeRepository, newUser);
-                managePostsView.Open();
+                await managePostsView.OpenAsync();
             }
             catch (ArgumentException e)
             {
