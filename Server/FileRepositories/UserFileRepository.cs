@@ -4,25 +4,39 @@ using RepositoryContracts;
 
 namespace FileRepositories;
 
-public class UserFileRepository:IUserRepository
+public class UserFileRepository : IUserRepository
 {
     private readonly string filePath = "users.json";
 
     public UserFileRepository()
     {
         if (!File.Exists(filePath))
+        {
             File.WriteAllText(filePath, "[]");
-        AddUserAsync(new User{Username = "betelgeuse", Password = "first_password"});
-        AddUserAsync(new User{Username = "orion", Password = "second_password"});
-        AddUserAsync(new User{Username = "rigel", Password = "third_password"});
-        AddUserAsync(new User{Username = "bohr", Password = "fourth_password"});
-        AddUserAsync(new User{Username = "faraday", Password = "fifth_password"});
+
+            int delay = 100;
+            Thread.Sleep(delay);
+            AddUserAsync(new User
+                { Username = "betelgeuse", Password = "first_password" });
+            Thread.Sleep(delay);
+            AddUserAsync(new User
+                { Username = "orion", Password = "second_password" });
+            Thread.Sleep(delay);
+            AddUserAsync(new User
+                { Username = "rigel", Password = "third_password" });
+            Thread.Sleep(delay);
+            AddUserAsync(new User
+                { Username = "bohr", Password = "fourth_password" });
+            Thread.Sleep(delay);
+            AddUserAsync(new User
+                { Username = "faraday", Password = "fifth_password" });
+        }
     }
 
     public async Task<User> AddUserAsync(User user)
     {
         List<User> users = await LoadUsersAsync();
-        int maxId = users.Count > 0 ? users.Max(like => like.UserId) : 1;
+        int maxId = users.Count > 0 ? users.Max(like => like.UserId) : 0;
         user.UserId = maxId + 1;
         users.Add(user);
         SaveUsersAsync(users);
@@ -65,8 +79,10 @@ public class UserFileRepository:IUserRepository
     public async Task<bool> IsUsernameValidAsync(string? username)
     {
         List<User> users = await LoadUsersAsync();
-        return username is not null && !username.Trim().Equals("") && users.All(u => u.Username != username);
+        return username is not null && !username.Trim().Equals("") &&
+               users.All(u => u.Username != username);
     }
+
     private async Task<List<User>> LoadUsersAsync()
     {
         string usersAsJson = await File.ReadAllTextAsync(filePath);
@@ -77,7 +93,8 @@ public class UserFileRepository:IUserRepository
 
     private async void SaveUsersAsync(List<User> toSaveUsers)
     {
-        string usersAsJson = JsonSerializer.Serialize(toSaveUsers);
+        string usersAsJson = JsonSerializer.Serialize(toSaveUsers,
+            new JsonSerializerOptions { WriteIndented = true });
         await File.WriteAllTextAsync(filePath, usersAsJson);
     }
 }

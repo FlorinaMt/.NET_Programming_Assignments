@@ -31,11 +31,10 @@ public class OpenedPostView
     public async Task OpenAsync()
     {
         await DisplayCompletePostAsync();
-
-        string userInput = Choose();
-
+        string userInput;
         do
         {
+            userInput = Choose();
             if (userInput.Equals("1"))
             {
                 try
