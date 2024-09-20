@@ -7,7 +7,18 @@ namespace FileRepositories;
 public class UserFileRepository:IUserRepository
 {
     private readonly string filePath = "users.json";
-    
+
+    public UserFileRepository()
+    {
+        if (!File.Exists(filePath))
+            File.WriteAllText(filePath, "[]");
+        AddUserAsync(new User{Username = "betelgeuse", Password = "first_password"});
+        AddUserAsync(new User{Username = "orion", Password = "second_password"});
+        AddUserAsync(new User{Username = "rigel", Password = "third_password"});
+        AddUserAsync(new User{Username = "bohr", Password = "fourth_password"});
+        AddUserAsync(new User{Username = "faraday", Password = "fifth_password"});
+    }
+
     public async Task<User> AddUserAsync(User user)
     {
         List<User> users = await LoadUsersAsync();
