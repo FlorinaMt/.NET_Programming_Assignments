@@ -49,14 +49,14 @@ public class CommentInMemoryRepository : ICommentRepository
 
     public async Task UpdateCommentAsync(Comment comment)
     {
-        Comment commentToUpdate = GetCommentByIdAsync(comment.CommentId).Result;
+        Comment commentToUpdate = await GetCommentByIdAsync(comment.CommentId);
         comments.Remove(commentToUpdate);
         comments.Add(comment);
     }
 
     public async Task DeleteCommentAsync(int commentId)
     {
-        Comment commentToDelete = GetCommentByIdAsync(commentId).Result;
+        Comment commentToDelete = await GetCommentByIdAsync(commentId);
         comments.Remove(commentToDelete);
     }
 
