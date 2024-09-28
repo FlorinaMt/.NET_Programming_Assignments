@@ -1,6 +1,6 @@
 ﻿namespace ApiContracts.LikeRelated;
 
-public class AddLike
+public class AddLikeRequestDto
 {
     public int UserId { get; set; }
     public int PostId { get; set; }

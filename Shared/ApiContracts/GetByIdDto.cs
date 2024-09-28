@@ -1,6 +1,6 @@
 ﻿namespace ApiContracts;
 
-public class GetById
+public class GetByIdDto
 {
     public int id { get; set; }
 }
