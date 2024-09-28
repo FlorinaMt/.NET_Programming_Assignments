@@ -182,8 +182,6 @@ public class CommentFileRepository : ICommentRepository
 
         List<Comment> foundComments =
             comments.FindAll(c => c.PostId == postId);
-        if (foundComments.Count == 0)
-            throw new InvalidOperationException("No comments for this post.");
         return foundComments.AsQueryable();
     }
 

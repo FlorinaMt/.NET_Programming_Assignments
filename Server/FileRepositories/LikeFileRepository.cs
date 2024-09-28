@@ -86,8 +86,6 @@ public class LikeFileRepository : ILikeRepository
         List<Like> likes = LoadLikesAsync().Result;
         List<Like> likesForPost =
             likes.Where(like => like.PostId == postId).ToList();
-        if (likesForPost.Count == 0)
-            throw new InvalidOperationException("No likes for this post.");
 
         return likesForPost.AsQueryable();
     }

@@ -8,9 +8,9 @@ namespace WebAPI.Controllers;
 
 /*
  * _Users - POST(username, password) -> (username, id);
-            GET (?nameContains) -> (username[]);
-            PUT (userId, username, password) -> (username, id) /*reuse from POST* /;
-            DELETE (username, password) /*reuse from POST* / -> ();
+         GET (?nameContains) -> (username[]);
+         PUT (userId, username, password) -> (username, id) /*reuse from POST*\; 
+         DELETE (userId, password) -> ();
  */
 
 [ApiController]

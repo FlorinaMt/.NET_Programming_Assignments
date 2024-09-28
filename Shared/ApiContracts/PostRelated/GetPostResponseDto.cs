@@ -1,6 +1,6 @@
 ﻿namespace ApiContracts;
 
-public class GetPostResponse
+public class GetPostResponseDto
 {
     public required string Title { get; set; }
     public required string Body { get; set; }
