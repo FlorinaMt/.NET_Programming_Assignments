@@ -129,5 +129,17 @@ public class PostsController : ControllerBase
         
         throw new ArgumentException("Only the author can update this post.");
     }
+
+    [HttpDelete]
+    public async Task<IResult> DeletePost([FromBody] DeleteRequestDto request)
+    {
+        Post post = await postRepository.GetPostByIdAsync(request.ItemId);
+        if (post.UserId == request.UserId)
+        {
+            await postRepository.DeletePostAsync(request.ItemId);
+            return Results.NoContent();
+        }
+        throw new ArgumentException("Only the author can delete this post.");
+    }
     
 }

@@ -96,6 +96,7 @@ public class PostFileRepository : IPostRepository
         List<Post> posts = await LoadPostsAsync();
         Post postToDelete = await GetPostByIdAsync(postId);
         posts.Remove(postToDelete);
+        SavePostsAsync(posts);
     }
 
     public async Task<Post> GetPostByIdAsync(int postId)
