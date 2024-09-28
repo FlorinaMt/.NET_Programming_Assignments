@@ -1,4 +1,5 @@
-﻿using ApiContracts.LikeRelated;
+﻿using ApiContracts;
+using ApiContracts.LikeRelated;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryContracts;
@@ -37,5 +38,19 @@ public class LikesController : ControllerBase
         }
 
         return Ok(likes);
+    }
+
+    [HttpDelete]
+    public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request)
+    {
+        Like like = await likeRepository.GetLikeByIdAsync(request.ItemId);
+
+        if (like.UserId == request.UserId)
+        {
+            await likeRepository.DeleteLikeAsync(like);
+            return Results.NoContent();
+        }
+
+        throw new ArgumentException("No like added for this post.");
     }
 }
