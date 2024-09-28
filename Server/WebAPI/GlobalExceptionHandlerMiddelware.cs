@@ -17,8 +17,9 @@ namespace LearnWebAPI.Middlewares
             }
             catch (ArgumentException ex)
             {
-                    context.Response.StatusCode = 400;
-                    await context.Response.WriteAsJsonAsync(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsJsonAsync(ex.Message);
             }
             catch (InvalidOperationException ex)
             {

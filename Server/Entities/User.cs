@@ -36,8 +36,8 @@ public class User
         if (obj is null)
             return false;
         User other=(User)obj;
-        if (other.Username == this.Username && other.Password == this.Password &
-            other.UserId == this.UserId)
+        if (other.Username.Equals(Username) && other.Password.Equals(Password) &
+            other.UserId == UserId)
             return true;
         return false;
     }
