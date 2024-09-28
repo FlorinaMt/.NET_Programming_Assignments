@@ -1,4 +1,5 @@
 ﻿using ApiContracts;
+using ApiContracts.LikeRelated;
 using Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -140,6 +141,27 @@ public class PostsController : ControllerBase
             return Results.NoContent();
         }
         throw new ArgumentException("Only the author can delete this post.");
+    }
+    
+    //--------------------------------LIKES---------------------------------
+    [HttpPost("{id}/Likes")]
+    public async Task<ActionResult<GetLikeDto>> AddLike(
+        AddLikeRequestDto request, [FromRoute] int id)
+    {
+        await userRepository.GetUserByIdAsync(request.UserId);
+        await postRepository.GetPostByIdAsync(id);
+        
+        foreach(Like like in likeRepository.GetLikesForPost(id))
+            if (like.UserId == request.UserId)
+                throw new ArgumentException("You already liked this post.");
+
+        Like newLike = new Like
+            { UserId = request.UserId, PostId = id };
+        await likeRepository.AddLikeAsync(newLike);
+        
+        GetLikeDto created=new GetLikeDto{LikeId = newLike.LikeId, PostId = id, Username = (await userRepository.GetUserByIdAsync(newLike.UserId)).Username};
+        return Created($"/Posts/{id}/Likes/{created.LikeId}", created);
+
     }
     
 }
