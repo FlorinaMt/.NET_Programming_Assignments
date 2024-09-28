@@ -28,7 +28,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Post>> CreatePost(
+    public async Task<ActionResult<Post>> CreatePostAsync(
         [FromBody] CreatePostRequestDto request)
     {
         await userRepository.GetUserByIdAsync(request.UserId);
@@ -42,7 +42,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GetPostResponseDto>> GetPost(
+    public async Task<ActionResult<GetPostResponseDto>> GetPostAsync(
         [FromRoute] int id)
     {
         GetPostResponseDto sendDto = await GetPostIdAsync(id);
@@ -50,7 +50,7 @@ public class PostsController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<List<GetPostResponseDto>>> GetPosts(
+    public async Task<ActionResult<List<GetPostResponseDto>>> GetPostsAsync(
         [FromQuery] string? author)
     {
         List<GetPostResponseDto> sendDto = new List<GetPostResponseDto>();
@@ -132,7 +132,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IResult> DeletePost([FromBody] DeleteRequestDto request)
+    public async Task<IResult> DeletePostAsync([FromBody] DeleteRequestDto request)
     {
         Post post = await postRepository.GetPostByIdAsync(request.ItemId);
         if (post.UserId == request.UserId)
@@ -145,7 +145,7 @@ public class PostsController : ControllerBase
     
     //--------------------------------LIKES---------------------------------
     [HttpPost("{id}/Likes")]
-    public async Task<ActionResult<GetLikeDto>> AddLike(
+    public async Task<ActionResult<GetLikeDto>> AddLikeAsync(
         AddLikeRequestDto request, [FromRoute] int id)
     {
         await userRepository.GetUserByIdAsync(request.UserId);

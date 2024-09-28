@@ -25,7 +25,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<AddUserResponseDto>> AddUser(
+    public async Task<ActionResult<AddUserResponseDto>> AddUserAsync(
         [FromBody] AddUserRequestDto request)
     {
         if (await userRepository.IsUsernameValidAsync(request.Username))
@@ -44,7 +44,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IResult> GetAllUsers([FromQuery] string? nameContains)
+    public async Task<IResult> GetAllUsersAsync([FromQuery] string? nameContains)
     {
         List<string> usernames = new List<string>();
 
@@ -62,7 +62,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<AddUserResponseDto>> ReplaceUser(
+    public async Task<ActionResult<AddUserResponseDto>> ReplaceUserAsync(
         [FromBody] ReplaceUserRequestDto request)
     {
         //check the username and password together? 
@@ -78,7 +78,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IResult> DeleteUser([FromBody] DeleteUserRequestDto request)
+    public async Task<IResult> DeleteUserAsync([FromBody] DeleteUserRequestDto request)
     {
         //check for the username and password together
 

@@ -13,13 +13,29 @@ public class LikesController : ControllerBase
     private readonly IPostRepository postRepository;
     private readonly ILikeRepository likeRepository;
 
-    public LikesController(IUserRepository userRepository, ILikeRepository likeRepository, IPostRepository postRepository)
+    public LikesController(IUserRepository userRepository,
+        ILikeRepository likeRepository, IPostRepository postRepository)
     {
         this.userRepository = userRepository;
         this.likeRepository = likeRepository;
         this.postRepository = postRepository;
     }
 
-    
-    
+    [HttpGet]
+    public async Task<ActionResult<List<GetLikeDto>>> GetLikesAsync()
+    {
+        List<GetLikeDto> likes = new List<GetLikeDto>();
+        foreach (Like l in likeRepository.GetAllLikes())
+        {
+            likes.Add(new GetLikeDto
+            {
+                LikeId = l.LikeId,
+                Username = (await userRepository.GetUserByIdAsync(l.UserId))
+                    .Username,
+                PostId = l.PostId
+            });
+        }
+
+        return Ok(likes);
+    }
 }
