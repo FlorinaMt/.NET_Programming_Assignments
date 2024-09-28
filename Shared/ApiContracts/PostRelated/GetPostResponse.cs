@@ -7,5 +7,5 @@ public class GetPostResponse
     public string AuthorUsername { get; set; }
     public int PostId { get; set; }
     public int LikesNo  { get; set; }
-    public List<Object> Comments { get; set; }
+    public List<GetCommentResponseDto> Comments { get; set; }
 }

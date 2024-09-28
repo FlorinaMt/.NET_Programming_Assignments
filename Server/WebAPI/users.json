@@ -1,0 +1,30 @@
+[
+  {
+    "UserId": 1,
+    "Username": "betelgeuse"
+  },
+  {
+    "UserId": 2,
+    "Username": "orion"
+  },
+  {
+    "UserId": 3,
+    "Username": "rigel"
+  },
+  {
+    "UserId": 4,
+    "Username": "bohr"
+  },
+  {
+    "UserId": 5,
+    "Username": "faraday"
+  },
+  {
+    "UserId": 6,
+    "Username": "myname"
+  },
+  {
+    "UserId": 7,
+    "Username": "betelgeuse"
+  }
+]
