@@ -2,7 +2,7 @@
 
 public class AddReactionRequestDto
 {
-    public int UserId { get; set; }
-    public int CommentId { get; set; }
-    public bool IsPositive { get; set; }
+    public required int UserId { get; set; }
+    public required int CommentId { get; set; }
+    public required bool IsPositive { get; set; }
 }

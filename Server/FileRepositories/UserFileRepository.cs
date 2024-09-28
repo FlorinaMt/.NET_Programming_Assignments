@@ -46,7 +46,9 @@ public class UserFileRepository : IUserRepository
     public async Task UpdateUserAsync(User user)
     {
         List<User> users = await LoadUsersAsync();
+        
         User userToUpdate = await GetUserByIdAsync(user.UserId);
+
         users.Remove(userToUpdate);
         users.Add(user);
         SaveUsersAsync(users);
@@ -66,7 +68,7 @@ public class UserFileRepository : IUserRepository
         User? user = users.SingleOrDefault(l => l.UserId == userId);
         if (user is null)
             throw new InvalidOperationException(
-                $"User with ID {user} not found.");
+                $"User with ID {userId} not found.");
         return user;
     }
 

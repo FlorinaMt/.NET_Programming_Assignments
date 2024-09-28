@@ -2,8 +2,7 @@
 
 public class ReplaceUserRequestDto
 {
-    public int UserId { get; set; }
-    public string Username { get; set; }
-    public string NewPassword { get; set; }
-    public string OldPassword { get; set; }
+    public required int UserId { get; set; }
+    public required string Username { get; set; }
+    public required string Password { get; set; }
 }

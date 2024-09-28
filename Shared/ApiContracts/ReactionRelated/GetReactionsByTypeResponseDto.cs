@@ -2,7 +2,7 @@
 
 public class GetReactionsByTypeResponseDto
 {
-    public int CommentId { get; set; }
-    public int PositiveReactionsCount { get; set; }
-    public int NegativeReactionsCount { get; set; }
+    public required int CommentId { get; set; }
+    public required int PositiveReactionsCount { get; set; }
+    public required int NegativeReactionsCount { get; set; }
 }

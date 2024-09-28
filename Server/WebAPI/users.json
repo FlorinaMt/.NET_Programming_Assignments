@@ -1,30 +1,22 @@
 [
   {
     "UserId": 1,
-    "Username": "betelgeuse"
-  },
-  {
-    "UserId": 2,
-    "Username": "orion"
-  },
-  {
-    "UserId": 3,
-    "Username": "rigel"
+    "Username": "betelgeuse",
+    "Password": "first_password"
   },
   {
     "UserId": 4,
-    "Username": "bohr"
+    "Username": "bohr",
+    "Password": "fourth_password"
   },
   {
     "UserId": 5,
-    "Username": "faraday"
+    "Username": "betee",
+    "Password": "string"
   },
   {
-    "UserId": 6,
-    "Username": "myname"
-  },
-  {
-    "UserId": 7,
-    "Username": "betelgeuse"
+    "UserId": 3,
+    "Username": "b1etee",
+    "Password": "string"
   }
 ]
