@@ -1,4 +1,6 @@
-﻿namespace ApiContracts;
+﻿using ApiContracts.LikeRelated;
+
+namespace ApiContracts;
 
 public class GetPostResponseDto
 {
@@ -7,5 +9,6 @@ public class GetPostResponseDto
     public required string AuthorUsername { get; set; }
     public required int PostId { get; set; }
     public required int LikesNo  { get; set; }
+    public required List<GetLikeDto> Likes { get; set; }
     public required List<GetCommentResponseDto> Comments { get; set; }
 }

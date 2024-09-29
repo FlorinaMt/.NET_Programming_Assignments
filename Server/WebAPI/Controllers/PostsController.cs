@@ -32,44 +32,45 @@ public class PostsController : ControllerBase
         [FromBody] CreatePostRequestDto request)
     {
         await userRepository.GetUserByIdAsync(request.UserId);
-            Post post = new()
-            {
-                Title = request.Title, Body = request.Body,
-                UserId = request.UserId
-            };
-            Post created = await postRepository.AddPostAsync(post);
-            return Created($"/Posts/{created.PostId}", created);
+        Post post = new()
+        {
+            Title = request.Title, Body = request.Body,
+            UserId = request.UserId
+        };
+        Post created = await postRepository.AddPostAsync(post);
+        return Created($"/Posts/{created.PostId}", created);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<GetPostResponseDto>> GetPostAsync(
         [FromRoute] int id)
     {
-        GetPostResponseDto sendDto = await GetPostIdAsync(id);
+        GetPostResponseDto sendDto = await GetPostByIdAsync(id);
         return Created($"/Posts/{id}", sendDto);
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<List<GetPostResponseDto>>> GetPostsAsync(
         [FromQuery] string? author)
     {
         List<GetPostResponseDto> sendDto = new List<GetPostResponseDto>();
-        
+
         //extracts all posts
         foreach (Post post in postRepository.GetPosts())
-            sendDto.Add(await GetPostIdAsync(post.PostId));
+            sendDto.Add(await GetPostByIdAsync(post.PostId));
 
         //filter them
         if (!string.IsNullOrEmpty(author))
-            sendDto = sendDto.Where(p => p.AuthorUsername.ToLower().Equals(author.ToLower())).ToList();
+            sendDto = sendDto.Where(p =>
+                p.AuthorUsername.ToLower().Equals(author.ToLower())).ToList();
 
         if (sendDto.Count == 0)
             throw new ArgumentException("No posts found.");
-        
+
         return Created($"/Posts", sendDto);
     }
 
-    private async Task<GetPostResponseDto> GetPostIdAsync(int postId)
+    private async Task<GetPostResponseDto> GetPostByIdAsync(int postId)
     {
         Post post = await postRepository.GetPostByIdAsync(postId);
 
@@ -77,8 +78,23 @@ public class PostsController : ControllerBase
         String authorUsername =
             (await userRepository.GetUserByIdAsync(post.UserId)).Username;
 
+        //extract the likes
+        List<Like> likesForPost =
+            likeRepository.GetLikesForPost(post.PostId).ToList();
+
         //extract the number of likes
-        int likesNo = likeRepository.GetLikesForPost(post.PostId).Count();
+        int likesNo = likesForPost.Count;
+
+        //extract the elements as DTOs
+        List<GetLikeDto> likes = new();
+
+        foreach (Like l in likesForPost)
+            likes.Add(new GetLikeDto
+            {
+                LikeId = l.LikeId, PostId = post.PostId,
+                Username = (await userRepository.GetUserByIdAsync(l.UserId)).Username
+            });
+
 
         //extract the comments
         List<GetCommentResponseDto> comments = new();
@@ -87,7 +103,8 @@ public class PostsController : ControllerBase
                      post.PostId))
             comments.Add(new GetCommentResponseDto
             {
-                Body = comment.CommentBody, PostId = comment.PostId,
+                CommentId = comment.CommentId,
+                Body = comment.CommentBody, PostId = postId,
                 AuthorUsername =
                     (await userRepository.GetUserByIdAsync(comment.UserId))
                     .Username
@@ -98,18 +115,20 @@ public class PostsController : ControllerBase
             Title = post.Title, Body = post.Body, PostId = post.PostId,
             AuthorUsername = authorUsername,
             LikesNo = likesNo,
+            Likes = likes,
             Comments = comments
         };
         return sendDto;
     }
 
     [HttpPut]
-    public async Task<ActionResult<GetPostResponseDto>> ReplacePost([FromBody]
-        DeleteRequestDto request, [FromQuery] string? title, [FromQuery] string? body)
+    public async Task<ActionResult<GetPostResponseDto>> ReplacePost(
+        [FromBody] DeleteRequestDto request, [FromQuery] string? title,
+        [FromQuery] string? body)
     {
         //get the post
         Post post = await postRepository.GetPostByIdAsync(request.ItemId);
-        
+
         //if this is the author, they can update it
         if (post.UserId == request.UserId)
         {
@@ -120,19 +139,20 @@ public class PostsController : ControllerBase
             };
 
             await postRepository.UpdatePostAsync(newPost);
-            
+
             GetPostResponseDto updatedPost =
-                await GetPostIdAsync(request.ItemId);
-            
-            
+                await GetPostByIdAsync(request.ItemId);
+
+
             return Created($"/Posts/{updatedPost.PostId}", updatedPost);
         }
-        
+
         throw new ArgumentException("Only the author can update this post.");
     }
 
     [HttpDelete]
-    public async Task<IResult> DeletePostAsync([FromBody] DeleteRequestDto request)
+    public async Task<IResult> DeletePostAsync(
+        [FromBody] DeleteRequestDto request)
     {
         Post post = await postRepository.GetPostByIdAsync(request.ItemId);
         if (post.UserId == request.UserId)
@@ -140,28 +160,61 @@ public class PostsController : ControllerBase
             await postRepository.DeletePostAsync(request.ItemId);
             return Results.NoContent();
         }
+
         throw new ArgumentException("Only the author can delete this post.");
     }
-    
-    //--------------------------------LIKES---------------------------------
+
+    //--------------------------------ADD LIKE---------------------------------
     [HttpPost("{id}/Likes")]
     public async Task<ActionResult<GetLikeDto>> AddLikeAsync(
         AddLikeRequestDto request, [FromRoute] int id)
     {
         await userRepository.GetUserByIdAsync(request.UserId);
         await postRepository.GetPostByIdAsync(id);
-        
-        foreach(Like like in likeRepository.GetLikesForPost(id))
+
+        foreach (Like like in likeRepository.GetLikesForPost(id))
             if (like.UserId == request.UserId)
                 throw new ArgumentException("You already liked this post.");
 
         Like newLike = new Like
             { UserId = request.UserId, PostId = id };
-        await likeRepository.AddLikeAsync(newLike);
-        
-        GetLikeDto created=new GetLikeDto{LikeId = newLike.LikeId, PostId = id, Username = (await userRepository.GetUserByIdAsync(newLike.UserId)).Username};
-        return Created($"/Posts/{id}/Likes/{created.LikeId}", created);
+        Like addedLike = await likeRepository.AddLikeAsync(newLike);
 
+        GetLikeDto created = new GetLikeDto
+        {
+            LikeId = addedLike.LikeId, PostId = id,
+            Username = (await userRepository.GetUserByIdAsync(addedLike.UserId))
+                .Username
+        };
+        return Created($"/Posts/{id}/Likes/{created.LikeId}", created);
     }
-    
+
+    //------------------------------ADD COMMENT--------------------------------
+
+    [HttpPost("{id}/Comments")]
+    public async Task<ActionResult<GetCommentResponseDto>> AddCommentAsync(
+        CreateCommentRequestDto request, [FromRoute] int id)
+    {
+        await userRepository.GetUserByIdAsync(request.UserId);
+        await postRepository.GetPostByIdAsync(id);
+
+        Comment newComment = new Comment
+        {
+            CommentBody = request.Body, PostId = id, UserId = request.UserId
+        };
+
+        Comment addedComment =
+            await commentRepository.AddCommentAsync(newComment);
+
+        GetCommentResponseDto created = new GetCommentResponseDto
+        {
+            CommentId = addedComment.CommentId, Body = addedComment.CommentBody,
+            PostId = id,
+            AuthorUsername =
+                (await userRepository.GetUserByIdAsync(addedComment.UserId))
+                .Username
+        };
+
+        return Created($"/Posts/{id}/Comments/{created.CommentId}", created);
+    }
 }
