@@ -13,24 +13,28 @@ public class UserFileRepository : IUserRepository
         if (!File.Exists(filePath))
         {
             File.WriteAllText(filePath, "[]");
-
-            int delay = 100;
-            Thread.Sleep(delay);
-            AddUserAsync(new User
-                { Username = "betelgeuse", Password = "first_password" });
-            Thread.Sleep(delay);
-            AddUserAsync(new User
-                { Username = "orion", Password = "second_password" });
-            Thread.Sleep(delay);
-            AddUserAsync(new User
-                { Username = "rigel", Password = "third_password" });
-            Thread.Sleep(delay);
-            AddUserAsync(new User
-                { Username = "bohr", Password = "fourth_password" });
-            Thread.Sleep(delay);
-            AddUserAsync(new User
-                { Username = "faraday", Password = "fifth_password" });
+            AddDummyDataAsync();
         }
+    }
+
+    public async Task AddDummyDataAsync()
+    {
+        int delay = 1000;
+        Thread.Sleep(delay);
+        await AddUserAsync(new User
+            { Username = "betelgeuse", Password = "first_password" });
+        Thread.Sleep(delay);
+        await AddUserAsync(new User
+            { Username = "orion", Password = "second_password" });
+        Thread.Sleep(delay);
+        await AddUserAsync(new User
+            { Username = "rigel", Password = "third_password" });
+        Thread.Sleep(delay);
+        await AddUserAsync(new User
+            { Username = "bohr", Password = "fourth_password" });
+        Thread.Sleep(delay);
+        await AddUserAsync(new User
+            { Username = "faraday", Password = "fifth_password" });
     }
 
     public async Task<User> AddUserAsync(User user)
@@ -46,7 +50,7 @@ public class UserFileRepository : IUserRepository
     public async Task UpdateUserAsync(User user)
     {
         List<User> users = await LoadUsersAsync();
-        
+
         User userToUpdate = await GetUserByIdAsync(user.UserId);
 
         users.Remove(userToUpdate);

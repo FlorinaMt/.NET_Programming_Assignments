@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using FileRepositories;
 using LearnWebAPI.Middlewares;
 using Microsoft.OpenApi.Models;
@@ -21,7 +22,6 @@ builder.Services.AddScoped<IPostRepository, PostFileRepository>();
 builder.Services.AddScoped<IUserRepository, UserFileRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentFileRepository>();
 builder.Services.AddScoped<ILikeRepository, LikeFileRepository>();
-
 
 var app = builder.Build();
 

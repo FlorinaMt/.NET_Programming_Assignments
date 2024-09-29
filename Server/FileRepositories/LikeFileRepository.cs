@@ -13,42 +13,46 @@ public class LikeFileRepository : ILikeRepository
         if (!File.Exists(filePath))
         {
             File.WriteAllText(filePath, "[]");
-
-
-            int delay = 100;
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 1, UserId = 2 });
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 1, UserId = 3 });
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 1, UserId = 4 });
-
-
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 2, UserId = 2 });
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 2, UserId = 5 });
-
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 3, UserId = 4 });
-
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 4, UserId = 1 });
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 4, UserId = 2 });
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 4, UserId = 3 });
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 4, UserId = 5 });
-
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 5, UserId = 1 });
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 5, UserId = 2 });
-            Thread.Sleep(delay);
-            AddLikeAsync(new Like { PostId = 5, UserId = 4 });
+            AddDummyDataAsync();
         }
     }
+
+    public async Task AddDummyDataAsync()
+    {
+        int delay = 1000;
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 1, UserId = 2 });
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 1, UserId = 3 });
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 1, UserId = 4 });
+
+
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 2, UserId = 2 });
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 2, UserId = 5 });
+
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 3, UserId = 4 });
+
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 4, UserId = 1 });
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 4, UserId = 2 });
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 4, UserId = 3 });
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 4, UserId = 5 });
+
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 5, UserId = 1 });
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 5, UserId = 2 });
+        Thread.Sleep(delay);
+        await AddLikeAsync(new Like { PostId = 5, UserId = 4 });
+    }
+
 
     public async Task<Like> AddLikeAsync(Like like)
     {
