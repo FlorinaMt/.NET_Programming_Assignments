@@ -64,10 +64,10 @@ public class LikeFileRepository : ILikeRepository
         return like;
     }
 
-    public async Task DeleteLikeAsync(Like like)
+    public async Task DeleteLikeAsync(int likeId)
     {
         List<Like> likes = await LoadLikesAsync();
-        Like likeToDelete = await GetLikeByIdAsync(like.LikeId);
+        Like likeToDelete = await GetLikeByIdAsync(likeId);
         likes.Remove(likeToDelete);
         SaveLikesAsync(likes);
     }

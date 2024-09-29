@@ -127,7 +127,7 @@ public class PostsController : ControllerBase
         [FromQuery] string? body)
     {
         //get the post
-        Post post = await postRepository.GetPostByIdAsync(request.ItemId);
+        Post post = await postRepository.GetPostByIdAsync(request.ItemToDeleteId);
 
         //if this is the author, they can update it
         if (post.UserId == request.UserId)
@@ -135,13 +135,13 @@ public class PostsController : ControllerBase
             Post newPost = new Post
             {
                 Title = title, Body = body, UserId = request.UserId,
-                PostId = request.ItemId
+                PostId = request.ItemToDeleteId
             };
 
             await postRepository.UpdatePostAsync(newPost);
 
             GetPostResponseDto updatedPost =
-                await GetPostByIdAsync(request.ItemId);
+                await GetPostByIdAsync(request.ItemToDeleteId);
 
 
             return Created($"/Posts/{updatedPost.PostId}", updatedPost);
@@ -154,10 +154,10 @@ public class PostsController : ControllerBase
     public async Task<IResult> DeletePostAsync(
         [FromBody] DeleteRequestDto request)
     {
-        Post post = await postRepository.GetPostByIdAsync(request.ItemId);
+        Post post = await postRepository.GetPostByIdAsync(request.ItemToDeleteId);
         if (post.UserId == request.UserId)
         {
-            await postRepository.DeletePostAsync(request.ItemId);
+            await postRepository.DeletePostAsync(request.ItemToDeleteId);
             return Results.NoContent();
         }
 

@@ -43,11 +43,11 @@ public class LikesController : ControllerBase
     [HttpDelete]
     public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request)
     {
-        Like like = await likeRepository.GetLikeByIdAsync(request.ItemId);
+        Like like = await likeRepository.GetLikeByIdAsync(request.ItemToDeleteId);
 
         if (like.UserId == request.UserId)
         {
-            await likeRepository.DeleteLikeAsync(like);
+            await likeRepository.DeleteLikeAsync(like.LikeId);
             return Results.NoContent();
         }
 

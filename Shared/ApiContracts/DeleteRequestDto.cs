@@ -3,5 +3,5 @@
 public class DeleteRequestDto
 {
     public int UserId { get; set; }
-    public int ItemId { get; set; }
+    public int ItemToDeleteId { get; set; }
 }
