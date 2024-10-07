@@ -9,7 +9,7 @@ namespace WebAPI.Controllers;
 /*
  * _Users - POST(username, password) -> (username, id);
          GET (?nameContains) -> (username[]);
-         PUT (userId, username, password) -> (username, id) /*reuse from POST*\; 
+         PUT (userId, username, password) -> (username, id) /*reuse from POST*\;
          DELETE (userId, password) -> ();
  */
 
@@ -35,16 +35,35 @@ public class UsersController : ControllerBase
                 Username = request.Username, Password = request.Password
             };
             User created = await userRepository.AddUserAsync(user);
-            
+
             AddUserResponseDto dtoSend = new()
                 { UserId = created.UserId, Username = created.Username };
             return Created($"/Users/{dtoSend.UserId}", created);
         }
+
         return BadRequest("Username is invalid.");
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AddUserResponseDto>> GetUserAsync(
+        [FromRoute] int id)
+    {
+        User user = await userRepository.GetUserByIdAsync(id);
+        try
+        {
+            AddUserResponseDto sendDto = new AddUserResponseDto
+                { UserId = id, Username = user.Username };
+            return Created($"/Users/{id}", sendDto);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [HttpGet]
-    public async Task<IResult> GetAllUsersAsync([FromQuery] string? nameContains)
+    public async Task<IResult> GetAllUsersAsync(
+        [FromQuery] string? nameContains)
     {
         List<string> usernames = new List<string>();
 
@@ -69,16 +88,23 @@ public class UsersController : ControllerBase
 
         if (await userRepository.IsUsernameValidAsync(request.Username))
         {
-            User user = new User{UserId = request.UserId, Username = request.Username, Password = request.Password};
+            User user = new User
+            {
+                UserId = request.UserId, Username = request.Username,
+                Password = request.Password
+            };
             await userRepository.UpdateUserAsync(user);
-            AddUserResponseDto sendDto = new() { UserId = user.UserId, Username = user.Username };
+            AddUserResponseDto sendDto = new()
+                { UserId = user.UserId, Username = user.Username };
             return Ok(sendDto);
         }
+
         return BadRequest("Username is invalid.");
     }
 
     [HttpDelete]
-    public async Task<IResult> DeleteUserAsync([FromBody] DeleteUserRequestDto request)
+    public async Task<IResult> DeleteUserAsync(
+        [FromBody] DeleteUserRequestDto request)
     {
         //check for the username and password together
 

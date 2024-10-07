@@ -19,7 +19,7 @@ public class PostFileRepository : IPostRepository
 
     public async Task AddDummyDataAsync()
     {
-        int delay = 1000;
+        int delay = 0;
         Thread.Sleep(delay);
         await AddPostAsync(new Post
         {

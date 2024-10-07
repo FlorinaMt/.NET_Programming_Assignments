@@ -19,7 +19,7 @@ public class UserFileRepository : IUserRepository
 
     public async Task AddDummyDataAsync()
     {
-        int delay = 1000;
+        int delay = 0;
         Thread.Sleep(delay);
         await AddUserAsync(new User
             { Username = "betelgeuse", Password = "first_password" });

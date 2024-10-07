@@ -19,7 +19,7 @@ public class LikeFileRepository : ILikeRepository
 
     public async Task AddDummyDataAsync()
     {
-        int delay = 1000;
+        int delay = 0;
         Thread.Sleep(delay);
         await AddLikeAsync(new Like { PostId = 1, UserId = 2 });
         Thread.Sleep(delay);
