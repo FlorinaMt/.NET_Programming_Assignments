@@ -13,62 +13,67 @@ public class PostFileRepository : IPostRepository
         if (!File.Exists(filePath))
         {
             File.WriteAllText(filePath, "[]");
-            int delay = 100;
-            Thread.Sleep(delay);
-            AddPostAsync(new Post
-            {
-                Title = "Solar eclipse today.",
-                Body = "Don't miss today's solar eclipse at 15:37.", UserId = 1
-            });
-            Thread.Sleep(delay);
-            AddPostAsync(new Post
-            {
-                Title = "Thread with dad jokes",
-                Body = "Leave your best dad jokes in comments.", UserId = 2
-            });
-
-            Thread.Sleep(delay);
-            AddPostAsync(new Post
-            {
-                Title = "Best supervisor at VIA.",
-                Body = "Haha, got your attention.", UserId = 3
-            });
-            Thread.Sleep(delay);
-            AddPostAsync(new Post
-            {
-                Title = "Thread with favorite books:", Body = "Lad os begynde",
-                UserId = 3
-            });
-
-            Thread.Sleep(delay);
-            AddPostAsync(new Post
-            {
-                Title = "DNP Exam",
-                Body =
-                    "No grade other than 12 is acceptable. Can we build it? Ja, selvfoelgelig!",
-                UserId = 4
-            });
-            Thread.Sleep(delay);
-            AddPostAsync(new Post
-            {
-                Title = "This is just another post.",
-                Body = "It's Sunday, 20:57 and I'm tired. Oh nej.", UserId = 5
-            });
-            Thread.Sleep(delay);
-            AddPostAsync(new Post
-            {
-                Title = "Pain... pain everywhere",
-                Body =
-                    "I'm in pain and Panodil doesn't help anymore. What should I do?",
-                UserId = 5
-            });
-            Thread.Sleep(delay);
-            AddPostAsync(new Post
-            {
-                Title = "Is the water wet?",
-                Body = "Tell me, please tell me. I need answers", UserId = 5
-            });
+            AddDummyDataAsync();
         }
+    }
+
+    public async Task AddDummyDataAsync()
+    {
+        int delay = 0;
+        Thread.Sleep(delay);
+        await AddPostAsync(new Post
+        {
+            Title = "Solar eclipse today.",
+            Body = "Don't miss today's solar eclipse at 15:37.", UserId = 1
+        });
+        Thread.Sleep(delay);
+        await AddPostAsync(new Post
+        {
+            Title = "Thread with dad jokes",
+            Body = "Leave your best dad jokes in comments.", UserId = 2
+        });
+
+        Thread.Sleep(delay);
+        await AddPostAsync(new Post
+        {
+            Title = "Best supervisor at VIA.",
+            Body = "Haha, got your attention.", UserId = 3
+        });
+        Thread.Sleep(delay);
+        await AddPostAsync(new Post
+        {
+            Title = "Thread with favorite books:", Body = "Lad os begynde",
+            UserId = 3
+        });
+
+        Thread.Sleep(delay);
+        await AddPostAsync(new Post
+        {
+            Title = "DNP Exam",
+            Body =
+                "No grade other than 12 is acceptable. Can we build it? Ja, selvfoelgelig!",
+            UserId = 4
+        });
+        Thread.Sleep(delay);
+        await AddPostAsync(new Post
+        {
+            Title = "This is just another post.",
+            Body = "It's Sunday, 20:57 and I'm tired. Oh nej.", UserId = 5
+        });
+        Thread.Sleep(delay);
+        await AddPostAsync(new Post
+        {
+            Title = "Pain... pain everywhere",
+            Body =
+                "I'm in pain and Panodil doesn't help anymore. What should I do?",
+            UserId = 5
+        });
+        Thread.Sleep(delay);
+        await AddPostAsync(new Post
+        {
+            Title = "Is the water wet?",
+            Body = "Tell me, please tell me. I need answers", UserId = 5
+        });
     }
 
     public async Task<Post> AddPostAsync(Post post)
@@ -96,6 +101,7 @@ public class PostFileRepository : IPostRepository
         List<Post> posts = await LoadPostsAsync();
         Post postToDelete = await GetPostByIdAsync(postId);
         posts.Remove(postToDelete);
+        SavePostsAsync(posts);
     }
 
     public async Task<Post> GetPostByIdAsync(int postId)

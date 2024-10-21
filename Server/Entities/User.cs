@@ -17,7 +17,11 @@ public class User
         }
     }
 
-    public string Password { 
+    public string Password {
+        get
+        {
+            return password;
+        }
         set
         {
             if(value.Length<5 || value.Trim().Equals(""))
@@ -27,4 +31,14 @@ public class User
         
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        User other=(User)obj;
+        if (other.Username.Equals(Username) && other.Password.Equals(Password) &
+            other.UserId == UserId)
+            return true;
+        return false;
+    }
 }

@@ -18,4 +18,13 @@ public class Comment
         }
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        Comment other=(Comment)obj;
+        if (other.CommentBody.Equals(commentBody) && other.UserId==UserId && other.PostId==PostId && other.CommentId==CommentId)
+            return true;
+        return false;
+    }
 }

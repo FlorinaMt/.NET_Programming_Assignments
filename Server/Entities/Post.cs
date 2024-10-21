@@ -29,5 +29,15 @@ public class Post
             body = value;
         }
     }
+    
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        Post other=(Post)obj;
+        if (other.UserId==UserId && other.Title.Equals(Title) && other.Body.Equals(Body) && other.PostId==PostId)
+            return true;
+        return false;
+    }
   
 }
