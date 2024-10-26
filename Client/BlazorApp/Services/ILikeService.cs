@@ -6,6 +6,6 @@ namespace BlazorApp.Services;
 
 public interface ILikeService
 {
-    public Task<ActionResult<GetLikeDto>> GetLikesAsync();
+    public Task<ActionResult<List<GetLikeDto>>> GetLikesAsync();
     public Task<IResult> DeleteLikeAsync(DeleteRequestDto request);
 }

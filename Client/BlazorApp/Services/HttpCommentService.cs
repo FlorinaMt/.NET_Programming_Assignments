@@ -15,7 +15,7 @@ public class HttpCommentService : ICommentService
         this.client = client;
     }
 
-    public async Task<ActionResult<GetCommentResponseDto>> GetCommentsAsync()
+    public async Task<ActionResult<List<GetCommentResponseDto>>> GetCommentsAsync()
     {
         HttpResponseMessage response = await client.GetAsync("Comments");
         string content = await response.Content.ReadAsStringAsync();
@@ -26,8 +26,8 @@ public class HttpCommentService : ICommentService
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
-        GetCommentResponseDto receivedDto =
-            JsonSerializer.Deserialize<GetCommentResponseDto>(content,
+        List<GetCommentResponseDto> receivedDto =
+            JsonSerializer.Deserialize<List<GetCommentResponseDto>>(content,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
