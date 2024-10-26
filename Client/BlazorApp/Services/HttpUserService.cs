@@ -29,13 +29,13 @@ public class HttpUserService:IUserService
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
-        AddUserResponseDto sendDto =
+        AddUserResponseDto receivedDto =
             JsonSerializer.Deserialize<AddUserResponseDto>(responseContent,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 })!;
-        return sendDto;
+        return receivedDto;
     }
 
     public async Task<ActionResult<AddUserResponseDto>> GetUserAsync(int id)
@@ -49,12 +49,12 @@ public class HttpUserService:IUserService
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
-        AddUserResponseDto sendDto = JsonSerializer.Deserialize<AddUserResponseDto>(
+        AddUserResponseDto receivedDto = JsonSerializer.Deserialize<AddUserResponseDto>(
             content, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             })!;
-        return sendDto;
+        return receivedDto;
     }
 
     public async Task<List<string>> GetAllUsersAsync(string? nameContains)
@@ -95,10 +95,10 @@ public class HttpUserService:IUserService
             throw new Exception($"Error: {response.StatusCode}, {responseContent}");
         }
         
-        AddUserResponseDto sendDto = JsonSerializer.Deserialize<AddUserResponseDto>(
+        AddUserResponseDto receivedDto = JsonSerializer.Deserialize<AddUserResponseDto>(
             responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
 
-        return sendDto;
+        return receivedDto;
     }
 
     public async Task<IResult> DeleteUserAsync(DeleteUserRequestDto request)

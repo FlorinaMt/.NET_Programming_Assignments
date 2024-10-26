@@ -31,13 +31,13 @@ public class HttpPostService : IPostService
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
-        GetPostResponseDto sendDto =
+        GetPostResponseDto receivedDto =
             JsonSerializer.Deserialize<GetPostResponseDto>(responseContent,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 })!;
-        return sendDto;
+        return receivedDto;
     }
 
     public async Task<ActionResult<GetPostResponseDto>> GetPostAsync(int id)
@@ -51,13 +51,13 @@ public class HttpPostService : IPostService
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
-        GetPostResponseDto sendDto =
+        GetPostResponseDto receivedDto =
             JsonSerializer.Deserialize<GetPostResponseDto>(content,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 })!;
-        return sendDto;
+        return receivedDto;
     }
 
     public async Task<ActionResult<List<GetPostResponseDto>>> GetPostsAsync(
@@ -76,13 +76,13 @@ public class HttpPostService : IPostService
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
-        List<GetPostResponseDto> sendDto =
+        List<GetPostResponseDto> receivedDto =
             JsonSerializer.Deserialize<List<GetPostResponseDto>>(content,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 })!;
-        return sendDto;
+        return receivedDto;
     }
 
     public async Task<ActionResult<GetPostResponseDto>> ReplacePostAsync(
@@ -102,13 +102,13 @@ public class HttpPostService : IPostService
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
-        GetPostResponseDto sendDto =
+        GetPostResponseDto receivedDto =
             JsonSerializer.Deserialize<GetPostResponseDto>(responseContent,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 })!;
-        return sendDto;
+        return receivedDto;
     }
 
     public async Task<IResult> DeletePostAsync(DeleteRequestDto request)
@@ -136,16 +136,53 @@ public class HttpPostService : IPostService
         return Results.NoContent();
     }
 
-    public Task<ActionResult<GetLikeDto>> AddLikeAsync(
+    public async Task<ActionResult<GetLikeDto>> AddLikeAsync(
         AddLikeRequestDto request, int id)
     {
-        throw new NotImplementedException();
+        string requestJson = JsonSerializer.Serialize(request);
+        StringContent stringContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response =
+            await client.PostAsync($"Posts/{id}/Likes", stringContent);
+        string content = await response.Content.ReadAsStringAsync();
         
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Error: {response.StatusCode}, {content}");
+            throw new Exception($"Error: {response.StatusCode}, {content}");
+        }
+
+        GetLikeDto receivedDto = JsonSerializer.Deserialize<GetLikeDto>(content,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            })!;
+
+        return receivedDto;
     }
 
-    public Task<ActionResult<GetCommentResponseDto>> AddCommentAsync(
+    public async Task<ActionResult<GetCommentResponseDto>> AddCommentAsync(
         CreateCommentRequestDto request, int id)
     {
-        throw new NotImplementedException();
+        string requestJson = JsonSerializer.Serialize(request);
+        StringContent stringContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response =
+            await client.PostAsync($"Posts/{id}/Comments", stringContent);
+        string content = await response.Content.ReadAsStringAsync();
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Error: {response.StatusCode}, {content}");
+            throw new Exception($"Error: {response.StatusCode}, {content}");
+        }
+
+        GetCommentResponseDto receivedDto = JsonSerializer.Deserialize<GetCommentResponseDto>(content,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            })!;
+
+        return receivedDto;
     }
 }
