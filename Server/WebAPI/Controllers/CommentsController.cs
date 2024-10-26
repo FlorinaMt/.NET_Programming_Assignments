@@ -28,7 +28,7 @@ public class CommentsController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<List<GetCommentResponseDto>>>
-        GetCommentAsync()
+        GetCommentsAsync()
     {
         List<GetCommentResponseDto>
             comments = new List<GetCommentResponseDto>();
@@ -48,7 +48,7 @@ public class CommentsController : ControllerBase
 
     [HttpPut]
     public async Task<ActionResult<GetCommentResponseDto>> ReplaceComment(
-        [FromBody] ReplaceCommentRequestDto request, [FromQuery] string? body)
+        [FromBody] ReplaceCommentRequestDto request)
     {
         //get the comment
         Comment comment =
@@ -82,7 +82,7 @@ public class CommentsController : ControllerBase
 
 
     [HttpDelete]
-    public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request)
+    public async Task<IResult> DeleteCommentAsync(DeleteRequestDto request)
     {
         Comment comment =
             await commentRepository.GetCommentByIdAsync(request.ItemToDeleteId);

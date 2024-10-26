@@ -102,13 +102,12 @@ public class UsersController : ControllerBase
         return BadRequest("Username is invalid.");
     }
 
-    [HttpDelete]
-    public async Task<IResult> DeleteUserAsync(
-        [FromBody] DeleteUserRequestDto request)
+    [HttpDelete("{id}")]
+    public async Task<IResult> DeleteUserAsync([FromRoute] int id)
     {
         //check for the username and password together
 
-        await userRepository.DeleteUserAsync(request.UserId);
+        await userRepository.DeleteUserAsync(id);
         return Results.NoContent();
     }
 }

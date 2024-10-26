@@ -28,7 +28,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Post>> CreatePostAsync(
+    public async Task<ActionResult<GetPostResponseDto>> CreatePostAsync(
         [FromBody] CreatePostRequestDto request)
     {
         await userRepository.GetUserByIdAsync(request.UserId);
@@ -122,7 +122,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<GetPostResponseDto>> ReplacePost(
+    public async Task<ActionResult<GetPostResponseDto>> ReplacePostAsync(
         [FromBody] DeleteRequestDto request, [FromQuery] string? title,
         [FromQuery] string? body)
     {
@@ -150,9 +150,9 @@ public class PostsController : ControllerBase
         throw new ArgumentException("Only the author can update this post.");
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IResult> DeletePostAsync(
-        [FromBody] DeleteRequestDto request)
+        [FromBody] DeleteRequestDto request, [FromRoute] int id)
     {
         Post post = await postRepository.GetPostByIdAsync(request.ItemToDeleteId);
         if (post.UserId == request.UserId)
