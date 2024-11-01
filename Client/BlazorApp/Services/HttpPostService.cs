@@ -15,7 +15,7 @@ public class HttpPostService : IPostService
         this.client = client;
     }
 
-    public async Task<ActionResult<GetPostResponseDto>> CreatePostAsync(
+    public async Task<GetPostResponseDto> CreatePostAsync(
         CreatePostRequestDto request)
     {
         String requestJson = JsonSerializer.Serialize(request);

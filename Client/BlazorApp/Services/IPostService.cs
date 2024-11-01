@@ -6,7 +6,7 @@ namespace BlazorApp.Services;
 
 public interface IPostService
 {
-    public Task<ActionResult<GetPostResponseDto>> CreatePostAsync (CreatePostRequestDto request);
+    public Task<GetPostResponseDto> CreatePostAsync (CreatePostRequestDto request);
     public Task<ActionResult<GetPostResponseDto>> GetPostAsync(int id);
     public Task<ActionResult<List<GetPostResponseDto>>> GetPostsAsync(string? author);
     public Task <ActionResult<GetPostResponseDto>> ReplacePostAsync (DeleteRequestDto request, string? title, string? body, int id);
