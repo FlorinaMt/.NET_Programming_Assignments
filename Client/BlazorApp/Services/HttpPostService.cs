@@ -40,7 +40,7 @@ public class HttpPostService : IPostService
         return receivedDto;
     }
 
-    public async Task<ActionResult<GetPostResponseDto>> GetPostAsync(int id)
+    public async Task<GetPostResponseDto> GetPostAsync(int id)
     {
         HttpResponseMessage response = await client.GetAsync($"Posts/{id}");
         String content = await response.Content.ReadAsStringAsync();
@@ -60,7 +60,7 @@ public class HttpPostService : IPostService
         return receivedDto;
     }
 
-    public async Task<ActionResult<List<GetPostResponseDto>>> GetPostsAsync(
+    public async Task<List<GetPostResponseDto>> GetPostsAsync(
         string? author)
     {
         string requestUri = "Posts";
@@ -85,7 +85,7 @@ public class HttpPostService : IPostService
         return receivedDto;
     }
 
-    public async Task<ActionResult<GetPostResponseDto>> ReplacePostAsync(
+    public async Task<GetPostResponseDto> ReplacePostAsync(
         DeleteRequestDto request, string? title, string? body, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
@@ -136,7 +136,7 @@ public class HttpPostService : IPostService
         return Results.NoContent();
     }
 
-    public async Task<ActionResult<GetLikeDto>> AddLikeAsync(
+    public async Task<GetLikeDto> AddLikeAsync(
         AddLikeRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
@@ -161,7 +161,7 @@ public class HttpPostService : IPostService
         return receivedDto;
     }
 
-    public async Task<ActionResult<GetCommentResponseDto>> AddCommentAsync(
+    public async Task<GetCommentResponseDto> AddCommentAsync(
         CreateCommentRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);

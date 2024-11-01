@@ -1,4 +1,4 @@
-﻿@page "/Posts"
+﻿@page "/CreatePost"
 @using ApiContracts
 @using BlazorApp.Services
 @using BlazorApp.Components.Blocks
@@ -13,7 +13,7 @@
     <LabelAndInputField T="string" Label="Title" Id="title" @bind-Value="postRequest.Title"/>
     <LabelAndInputField T="string" Label="Body" Id="body" @bind-Value="postRequest.Body"/>
     
-    <button type="submit" class="btn btn-primary">Create post</button>
+    <button type="submit" class="btn btn-primary mt-4 mb-4">Create post</button>
 </EditForm>
 
 @if (errorMessage != null)
@@ -28,6 +28,8 @@
 @code{
     private CreatePostRequestDto postRequest = new();
     private string? errorMessage, successMessage;
+    
+    [Parameter] public EventCallback OnPostCreated { get; set; }
 
     private async Task HandleValidSubmit()
     {
@@ -39,6 +41,8 @@
             var response = await PostService.CreatePostAsync(postRequest);
             successMessage = $"Post created successfully! Post id: {response.PostId}";
             errorMessage = null;
+            
+            await OnPostCreated.InvokeAsync(null);
         }
         catch (Exception e)
         {

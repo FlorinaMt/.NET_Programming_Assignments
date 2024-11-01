@@ -62,12 +62,12 @@ public class PostsController : ControllerBase
         //filter them
         if (!string.IsNullOrEmpty(author))
             sendDto = sendDto.Where(p =>
-                p.AuthorUsername.ToLower().Equals(author.ToLower())).ToList();
+                p.AuthorUsername.ToLower().Contains(author.ToLower())).ToList();
 
         if (sendDto.Count == 0)
             throw new ArgumentException("No posts found.");
 
-        return Created($"/Posts", sendDto);
+        return Ok(sendDto);
     }
 
     private async Task<GetPostResponseDto> GetPostByIdAsync(int postId)

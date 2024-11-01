@@ -16,7 +16,7 @@ public class HttpLikeService : ILikeService
         this.client = client;
     }
 
-    public async Task<ActionResult<List<GetLikeDto>>> GetLikesAsync()
+    public async Task<List<GetLikeDto>> GetLikesAsync()
     {
         HttpResponseMessage response = await client.GetAsync("Likes");
         string content = await response.Content.ReadAsStringAsync();

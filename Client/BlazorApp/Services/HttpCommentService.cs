@@ -15,7 +15,7 @@ public class HttpCommentService : ICommentService
         this.client = client;
     }
 
-    public async Task<ActionResult<List<GetCommentResponseDto>>> GetCommentsAsync()
+    public async Task<List<GetCommentResponseDto>> GetCommentsAsync()
     {
         HttpResponseMessage response = await client.GetAsync("Comments");
         string content = await response.Content.ReadAsStringAsync();
@@ -36,7 +36,7 @@ public class HttpCommentService : ICommentService
         return receivedDto;
     }
 
-    public async Task<ActionResult<GetCommentResponseDto>> ReplaceCommentAsync(
+    public async Task<GetCommentResponseDto> ReplaceCommentAsync(
         ReplaceCommentRequestDto request, int id)
     {
         String requestJson = JsonSerializer.Serialize(request);

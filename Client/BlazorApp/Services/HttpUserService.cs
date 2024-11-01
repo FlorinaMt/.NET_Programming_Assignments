@@ -40,7 +40,7 @@ public class HttpUserService:IUserService
         return receivedDto;
     }
 
-    public async Task<ActionResult<AddUserResponseDto>> GetUserAsync(int id)
+    public async Task<AddUserResponseDto> GetUserAsync(int id)
     {
         HttpResponseMessage response = await client.GetAsync($"/Users/{id}");
         string content = await response.Content.ReadAsStringAsync();
@@ -83,7 +83,7 @@ public class HttpUserService:IUserService
         return usernames ?? new List<string>();
     }
     
-    public async Task<ActionResult<AddUserResponseDto>> ReplaceUserAsync(ReplaceUserRequestDto request, int id)
+    public async Task<AddUserResponseDto> ReplaceUserAsync(ReplaceUserRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
         StringContent content = new StringContent(requestJson, Encoding.UTF8, "application/json");
