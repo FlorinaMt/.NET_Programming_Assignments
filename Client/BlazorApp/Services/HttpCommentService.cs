@@ -37,13 +37,13 @@ public class HttpCommentService : ICommentService
     }
 
     public async Task<ActionResult<GetCommentResponseDto>> ReplaceCommentAsync(
-        ReplaceCommentRequestDto request)
+        ReplaceCommentRequestDto request, int id)
     {
         String requestJson = JsonSerializer.Serialize(request);
         StringContent stringContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
 
         HttpResponseMessage response =
-            await client.PutAsync("Comments", stringContent);
+            await client.PutAsync($"Comments/{id}", stringContent);
         String content = await response.Content.ReadAsStringAsync();
         
         if (!response.IsSuccessStatusCode)
@@ -61,7 +61,7 @@ public class HttpCommentService : ICommentService
         return receivedDto;
     }
 
-    public async Task<IResult> DeleteCommentAsync(DeleteRequestDto request)
+    public async Task<IResult> DeleteCommentAsync(DeleteRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
         StringContent stringContent=new StringContent(requestJson, Encoding.UTF8, "application/json");
@@ -71,7 +71,7 @@ public class HttpCommentService : ICommentService
             {
                 Method = HttpMethod.Delete,
                 Content = stringContent,
-                RequestUri = new Uri("Comments")
+                RequestUri = new Uri($"Comments/{id}")
             });
         String content = await response.Content.ReadAsStringAsync();
         

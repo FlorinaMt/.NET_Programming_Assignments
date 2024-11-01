@@ -40,10 +40,10 @@ public class LikesController : ControllerBase
         return Ok(likes);
     }
 
-    [HttpDelete]
-    public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request)
+    [HttpDelete("{id}")]
+    public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request, [FromRoute] int id)
     {
-        Like like = await likeRepository.GetLikeByIdAsync(request.ItemToDeleteId);
+        Like like = await likeRepository.GetLikeByIdAsync(id);
 
         if (like.UserId == request.UserId)
         {

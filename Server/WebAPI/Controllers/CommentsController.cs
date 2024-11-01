@@ -46,13 +46,13 @@ public class CommentsController : ControllerBase
         return Ok(comments);
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<ActionResult<GetCommentResponseDto>> ReplaceComment(
-        [FromBody] ReplaceCommentRequestDto request)
+        [FromBody] ReplaceCommentRequestDto request, [FromRoute] int id)
     {
         //get the comment
         Comment comment =
-            await commentRepository.GetCommentByIdAsync(request.CommentId);
+            await commentRepository.GetCommentByIdAsync(id);
 
 
         //if this is the author, they can update it
@@ -81,8 +81,8 @@ public class CommentsController : ControllerBase
     }
 
 
-    [HttpDelete]
-    public async Task<IResult> DeleteCommentAsync(DeleteRequestDto request)
+    [HttpDelete("{id}")]
+    public async Task<IResult> DeleteCommentAsync(DeleteRequestDto request, [FromRoute] int id)
     {
         Comment comment =
             await commentRepository.GetCommentByIdAsync(request.ItemToDeleteId);

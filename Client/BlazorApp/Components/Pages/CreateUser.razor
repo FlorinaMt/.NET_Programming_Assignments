@@ -1,0 +1,51 @@
+@page "/Users"
+@using ApiContracts
+@using BlazorApp.Services
+@using BlazorApp.Components.Blocks
+@inject IUserService UserService
+
+<h3>Create Account</h3>
+
+<EditForm Model="@userRequest" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+    <LabelAndInputField Label="Username" Id="username" @bind-Value="userRequest.Username"/>
+    <LabelAndInputField Label="Password" Id="password" InputType="password" @bind-Value="userRequest.Password"/>
+
+    <button type="submit" class="btn btn-primary">Create Account</button>
+</EditForm>
+
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@if (successMessage != null)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@code {
+    private AddUserRequestDto userRequest = new ();
+    private string? errorMessage;
+    private string? successMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        Console.WriteLine("Oh no: " + userRequest.Username);
+        try
+        {
+            var response = await UserService.AddUserAsync(userRequest);
+            successMessage = $"User created successfully! User ID: {response.UserId}";
+            errorMessage = null; // Clear any previous error message
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.StackTrace);
+            errorMessage = $"Error creating user: {ex.Message}";
+            successMessage = null; // Clear any previous success message
+        }
+    }
+
+}

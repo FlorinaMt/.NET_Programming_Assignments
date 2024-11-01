@@ -28,6 +28,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<AddUserResponseDto>> AddUserAsync(
         [FromBody] AddUserRequestDto request)
     {
+        Console.WriteLine("Username" + request.Username + "   " + request.Password);
         if (await userRepository.IsUsernameValidAsync(request.Username))
         {
             User user = new User
@@ -38,7 +39,8 @@ public class UsersController : ControllerBase
 
             AddUserResponseDto dtoSend = new()
                 { UserId = created.UserId, Username = created.Username };
-            return Created($"/Users/{dtoSend.UserId}", created);
+            return Created($"/Users", created);
+
         }
 
         return BadRequest("Username is invalid.");
@@ -80,9 +82,9 @@ public class UsersController : ControllerBase
         return Results.Ok(usernames);
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<ActionResult<AddUserResponseDto>> ReplaceUserAsync(
-        [FromBody] ReplaceUserRequestDto request)
+        [FromBody] ReplaceUserRequestDto request, [FromRoute] int id)
     {
         //check the username and password together? 
 

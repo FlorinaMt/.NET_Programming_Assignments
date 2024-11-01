@@ -37,7 +37,7 @@ public class HttpLikeService : ILikeService
         return receivedDto;
     }
 
-    public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request)
+    public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
         StringContent requestContent = new StringContent(requestJson,
@@ -47,7 +47,7 @@ public class HttpLikeService : ILikeService
             new HttpRequestMessage
             {
                 Method = HttpMethod.Delete, Content = requestContent,
-                RequestUri = new Uri("Likes")
+                RequestUri = new Uri($"Likes/{id}")
             });
         string content = await response.Content.ReadAsStringAsync();
 

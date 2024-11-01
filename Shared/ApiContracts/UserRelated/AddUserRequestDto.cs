@@ -1,8 +1,11 @@
-﻿namespace ApiContracts;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ApiContracts;
 
 public class AddUserRequestDto
 {
-    public required string Username { get; set; }
-    public required string Password { get; set; }
+    public string Username { get; set; }
+    
+    public string Password { get; set; }
     
 }

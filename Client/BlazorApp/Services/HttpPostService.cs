@@ -86,14 +86,14 @@ public class HttpPostService : IPostService
     }
 
     public async Task<ActionResult<GetPostResponseDto>> ReplacePostAsync(
-        DeleteRequestDto request, string? title, string? body)
+        DeleteRequestDto request, string? title, string? body, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
         StringContent content = new StringContent(requestJson, Encoding.UTF8,
             "application/json");
 
         HttpResponseMessage response =
-            await client.PutAsync($"Posts/{request.ItemToDeleteId}", content);
+            await client.PutAsync($"Posts/{id}", content);
         String responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -111,7 +111,7 @@ public class HttpPostService : IPostService
         return receivedDto;
     }
 
-    public async Task<IResult> DeletePostAsync(DeleteRequestDto request)
+    public async Task<IResult> DeletePostAsync(DeleteRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
         StringContent stringContent = new StringContent(requestJson,
@@ -122,7 +122,7 @@ public class HttpPostService : IPostService
             {
                 Method = HttpMethod.Delete,
                 RequestUri = new Uri(client.BaseAddress,
-                    $"/Posts/{request.ItemToDeleteId}"),
+                    $"/Posts/{id}"),
                 Content = stringContent
             });
         String content = await response.Content.ReadAsStringAsync();

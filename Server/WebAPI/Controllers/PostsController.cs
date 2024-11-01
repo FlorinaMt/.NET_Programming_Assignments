@@ -38,7 +38,7 @@ public class PostsController : ControllerBase
             UserId = request.UserId
         };
         Post created = await postRepository.AddPostAsync(post);
-        return Created($"/Posts/{created.PostId}", created);
+        return Created($"/Posts", created);
     }
 
     [HttpGet("{id}")]
@@ -121,13 +121,13 @@ public class PostsController : ControllerBase
         return sendDto;
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<ActionResult<GetPostResponseDto>> ReplacePostAsync(
         [FromBody] DeleteRequestDto request, [FromQuery] string? title,
-        [FromQuery] string? body)
+        [FromQuery] string? body, [FromRoute] int id)
     {
         //get the post
-        Post post = await postRepository.GetPostByIdAsync(request.ItemToDeleteId);
+        Post post = await postRepository.GetPostByIdAsync(id);
 
         //if this is the author, they can update it
         if (post.UserId == request.UserId)
@@ -186,7 +186,7 @@ public class PostsController : ControllerBase
             Username = (await userRepository.GetUserByIdAsync(addedLike.UserId))
                 .Username
         };
-        return Created($"/Posts/{id}/Likes/{created.LikeId}", created);
+        return Created($"/Posts/{id}/Likes", created);
     }
 
     //------------------------------ADD COMMENT--------------------------------
@@ -215,6 +215,6 @@ public class PostsController : ControllerBase
                 .Username
         };
 
-        return Created($"/Posts/{id}/Comments/{created.CommentId}", created);
+        return Created($"/Posts/{id}/Comments", created);
     }
 }

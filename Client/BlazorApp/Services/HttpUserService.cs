@@ -20,12 +20,14 @@ public class HttpUserService:IUserService
         string requestJson = JsonSerializer.Serialize(request);
         StringContent content = new(requestJson, Encoding.UTF8, "application/json");
 
+        Console.WriteLine("Username http: " + request.Username + "; Password: " + request.Password);
+
         HttpResponseMessage response = await client.PostAsync("Users", content);
         string responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
         {
-            Console.WriteLine($"Error: {response.StatusCode}, {content}");
+            Console.WriteLine($"Error: {response.Content},         {response.ReasonPhrase},      {content}");
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
@@ -81,12 +83,12 @@ public class HttpUserService:IUserService
         return usernames ?? new List<string>();
     }
     
-    public async Task<ActionResult<AddUserResponseDto>> ReplaceUserAsync(ReplaceUserRequestDto request)
+    public async Task<ActionResult<AddUserResponseDto>> ReplaceUserAsync(ReplaceUserRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
         StringContent content = new StringContent(requestJson, Encoding.UTF8, "application/json");
 
-        HttpResponseMessage response = await client.PutAsync("/Users", content);
+        HttpResponseMessage response = await client.PutAsync($"/Users/{id}", content);
         string responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -101,7 +103,7 @@ public class HttpUserService:IUserService
         return receivedDto;
     }
 
-    public async Task<IResult> DeleteUserAsync(DeleteUserRequestDto request)
+    public async Task<IResult> DeleteUserAsync(DeleteUserRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
         StringContent stringContent = new StringContent(requestJson,
@@ -109,7 +111,7 @@ public class HttpUserService:IUserService
         HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage
         {
             Method = HttpMethod.Delete,
-            RequestUri = new Uri(client.BaseAddress, $"Users/{request.UserId}"),
+            RequestUri = new Uri(client.BaseAddress, $"Users/{id}"),
             Content = stringContent
         });
         String content = await response.Content.ReadAsStringAsync();
