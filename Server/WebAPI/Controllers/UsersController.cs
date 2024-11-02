@@ -39,7 +39,7 @@ public class UsersController : ControllerBase
 
             AddUserResponseDto dtoSend = new()
                 { UserId = created.UserId, Username = created.Username };
-            return Created($"/Users", created);
+            return Created($"/Users", dtoSend);
 
         }
 

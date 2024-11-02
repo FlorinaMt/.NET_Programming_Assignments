@@ -67,6 +67,7 @@ h1:focus
   display: flex;
   flex-direction: column;
   height: 100%; /* Make sure cards take full height */
+  width:100%;
   border: 1px solid #ddd; /* Optional: Add border for card visibility */
   border-radius: 0.5rem; /* Optional: Rounded corners */
   background-color: cyan; /* Optional: Card background color */

@@ -39,11 +39,13 @@
             var response = await UserService.AddUserAsync(userRequest);
             successMessage = $"User created successfully! User ID: {response.UserId}";
             errorMessage = null; // Clear any previous error message
+            userRequest.Username = "";
+            userRequest.Password = "";
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.StackTrace);
-            errorMessage = $"Error creating user: {ex.Message}";
+            errorMessage = ex.Message;
             successMessage = null; // Clear any previous success message
         }
     }

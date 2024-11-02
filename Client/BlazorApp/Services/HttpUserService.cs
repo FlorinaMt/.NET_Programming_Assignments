@@ -28,7 +28,7 @@ public class HttpUserService:IUserService
         if (!response.IsSuccessStatusCode)
         {
             Console.WriteLine($"Error: {response.Content},         {response.ReasonPhrase},      {content}");
-            throw new Exception($"Error: {response.StatusCode}, {content}");
+            throw new Exception(responseContent);
         }
 
         AddUserResponseDto receivedDto =
@@ -119,7 +119,7 @@ public class HttpUserService:IUserService
         if (!response.IsSuccessStatusCode)
         {
             Console.WriteLine($"Error: {response.StatusCode}, {content}");
-            throw new Exception($"Error: {response.StatusCode}, {content}");
+            throw new Exception($"Error: {response.ReasonPhrase}");
         }
         return Results.NoContent();
     }

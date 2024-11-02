@@ -41,7 +41,8 @@
             var response = await PostService.CreatePostAsync(postRequest);
             successMessage = $"Post created successfully! Post id: {response.PostId}";
             errorMessage = null;
-            
+            postRequest.Title = "";
+            postRequest.Body = "";
             await OnPostCreated.InvokeAsync(null);
         }
         catch (Exception e)
