@@ -1,0 +1,30 @@
+﻿@inherits ComponentBase
+@inject NavigationManager NavigationManager
+
+
+<div class="card post-card mb-4 @Class" @attributes="AdditionalAttributes" @onclick="()=>ShowPostDetails(PostId)">
+    <div class="card-body d-flex flex-column">
+        <ul class="list-unstyled">
+            <li>
+                <strong>@Author</strong>
+            </li>
+            <li>
+                @Title
+            </li>
+        </ul>
+    </div>
+</div>
+
+@code {
+[Parameter] public string Title { get; set; }
+[Parameter] public string Author { get; set; }
+[Parameter] public string Class { get; set; } = string.Empty;
+[Parameter] public IDictionary<string, object> AdditionalAttributes { get; set; } = new Dictionary<string, object>();
+
+[Parameter] public int PostId { get; set; }
+private void ShowPostDetails(int postId)
+    {
+        NavigationManager.NavigateTo($"posts/{PostId}");
+    }
+
+}

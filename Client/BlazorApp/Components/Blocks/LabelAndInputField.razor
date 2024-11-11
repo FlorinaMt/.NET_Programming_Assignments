@@ -1,0 +1,23 @@
+﻿@typeparam T
+
+<div class="input-label-container">
+    <label for="@Id" class="mt-4">@Label</label>
+
+    <input type="@InputType" id="@Id" @oninput="OnInputChange" class="form-control" value="@Value"/>
+
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; }
+    [Parameter] public string Id { get; set; }
+    [Parameter] public T Value { get; set; }
+    [Parameter] public EventCallback<T> ValueChanged { get; set; }
+    [Parameter] public string InputType { get; set; } = "text";
+
+    private async Task OnInputChange(ChangeEventArgs e)
+    {
+        Value = (T)Convert.ChangeType(e.Value, typeof(T));
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+}

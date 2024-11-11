@@ -2,6 +2,6 @@
 
 public class CreateCommentRequestDto
 {
-    public required int UserId { get; set; }
-    public required string Body { get; set; }
+    public int UserId { get; set; }
+    public string Body { get; set; }
 }

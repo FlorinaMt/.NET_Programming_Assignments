@@ -1,0 +1,105 @@
+﻿@page "/posts/{PostId}"
+@using System.Text.Json
+@using ApiContracts
+@using ApiContracts.LikeRelated
+@using BlazorApp.Services
+@inject IPostService PostService;
+
+<h3>@post?.Title</h3>
+
+@if (post != null)
+{
+    <div>
+        <p>
+            <strong>Author: </strong>@post.AuthorUsername
+        </p>
+        <p>
+            <strong>Likes: </strong>@post.LikesNo
+        </p>
+        <p>@post.Body</p>
+
+        <button @onclick="LikePost" class="bth btn-secondary">Like</button>
+
+        @if (errorMessage != null)
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+
+        <h4>Comments</h4>
+
+        @foreach (var comment in post.Comments)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <p>
+                        <strong>@comment.AuthorUsername</strong>: @comment.Body
+                    </p>
+                </div>
+            </div>
+        }
+
+        <h4>Add comment</h4>
+        <div>
+            <textarea @bind="newComment.Body" class="form-control" rows="3"></textarea>
+            <button class="btn btn-secondary mt-2 mb-4" @onclick="AddComment">Submit comment</button>
+        </div>
+
+    </div>
+}
+else
+{
+    <p>Post not found.</p>
+}
+
+@code{
+    [Parameter] public string PostId { get; set; }
+
+    private GetPostResponseDto post;
+    private CreateCommentRequestDto newComment = new();
+
+    private string? errorMessage;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (int.TryParse(PostId, out int postId))
+            post = await PostService.GetPostAsync(postId);
+        else Console.WriteLine("Invalid postId");
+    }
+
+    private async Task AddComment()
+    {
+        try
+        {
+            errorMessage = null;
+            if (!string.IsNullOrWhiteSpace(newComment.Body))
+            {
+                newComment.UserId = 1;
+                await PostService.AddCommentAsync(newComment, int.Parse(PostId));
+                newComment = new CreateCommentRequestDto();
+                post = await PostService.GetPostAsync(int.Parse(PostId));
+                errorMessage = null;
+            }
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
+    }
+
+    private async Task LikePost()
+    {
+        try
+        {
+            errorMessage = null;
+            await PostService.AddLikeAsync(new AddLikeRequestDto { UserId = 1 }, int.Parse(PostId));
+            post = await PostService.GetPostAsync(int.Parse(PostId));
+            errorMessage = null;
+        }
+        catch (Exception e)
+        {
+            errorMessage = e.Message;
+        }
+    }
+
+}

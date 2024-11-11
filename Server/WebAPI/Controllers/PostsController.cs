@@ -28,7 +28,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Post>> CreatePostAsync(
+    public async Task<ActionResult<GetPostResponseDto>> CreatePostAsync(
         [FromBody] CreatePostRequestDto request)
     {
         await userRepository.GetUserByIdAsync(request.UserId);
@@ -38,7 +38,7 @@ public class PostsController : ControllerBase
             UserId = request.UserId
         };
         Post created = await postRepository.AddPostAsync(post);
-        return Created($"/Posts/{created.PostId}", created);
+        return Created($"/Posts", created);
     }
 
     [HttpGet("{id}")]
@@ -62,12 +62,12 @@ public class PostsController : ControllerBase
         //filter them
         if (!string.IsNullOrEmpty(author))
             sendDto = sendDto.Where(p =>
-                p.AuthorUsername.ToLower().Equals(author.ToLower())).ToList();
+                p.AuthorUsername.ToLower().Contains(author.ToLower())).ToList();
 
         if (sendDto.Count == 0)
             throw new ArgumentException("No posts found.");
 
-        return Created($"/Posts", sendDto);
+        return Ok(sendDto);
     }
 
     private async Task<GetPostResponseDto> GetPostByIdAsync(int postId)
@@ -121,13 +121,13 @@ public class PostsController : ControllerBase
         return sendDto;
     }
 
-    [HttpPut]
-    public async Task<ActionResult<GetPostResponseDto>> ReplacePost(
+    [HttpPut("{id}")]
+    public async Task<ActionResult<GetPostResponseDto>> ReplacePostAsync(
         [FromBody] DeleteRequestDto request, [FromQuery] string? title,
-        [FromQuery] string? body)
+        [FromQuery] string? body, [FromRoute] int id)
     {
         //get the post
-        Post post = await postRepository.GetPostByIdAsync(request.ItemToDeleteId);
+        Post post = await postRepository.GetPostByIdAsync(id);
 
         //if this is the author, they can update it
         if (post.UserId == request.UserId)
@@ -150,9 +150,9 @@ public class PostsController : ControllerBase
         throw new ArgumentException("Only the author can update this post.");
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IResult> DeletePostAsync(
-        [FromBody] DeleteRequestDto request)
+        [FromBody] DeleteRequestDto request, [FromRoute] int id)
     {
         Post post = await postRepository.GetPostByIdAsync(request.ItemToDeleteId);
         if (post.UserId == request.UserId)
@@ -186,7 +186,7 @@ public class PostsController : ControllerBase
             Username = (await userRepository.GetUserByIdAsync(addedLike.UserId))
                 .Username
         };
-        return Created($"/Posts/{id}/Likes/{created.LikeId}", created);
+        return Created($"/Posts/{id}/Likes", created);
     }
 
     //------------------------------ADD COMMENT--------------------------------
@@ -215,6 +215,6 @@ public class PostsController : ControllerBase
                 .Username
         };
 
-        return Created($"/Posts/{id}/Comments/{created.CommentId}", created);
+        return Created($"/Posts/{id}/Comments", created);
     }
 }

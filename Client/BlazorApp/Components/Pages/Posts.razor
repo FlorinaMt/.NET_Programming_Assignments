@@ -1,0 +1,64 @@
+﻿@page "/Posts"
+
+@using ApiContracts
+@using BlazorApp.Components.Blocks
+@using BlazorApp.Services
+@inject IPostService PostService
+
+<PageTitle>Posts</PageTitle>
+
+<CreatePost OnPostCreated="LoadPostsAsync" />
+
+<h3>All posts</h3>
+<div>
+    <LabelAndInputField Label="Author" Id="author" @bind-Value="author"/>
+    <button @onclick="LoadPostsAsync" class="btn btn-primary mt-4 mb-4">Filter</button>
+</div>
+
+@if (foundPosts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else if (foundPosts.Count == 0)
+{
+    <p>No posts found.</p>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @foreach (GetPostResponseDto post in foundPosts)
+            {
+                <div class="col-sm-1 col-md-6 col-lg-3 mb-4 d-flex">
+                    <PostCard Author="@post.AuthorUsername" Title="@post.Title" Class="card-equal-height" PostId="@post.PostId" />
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code{
+    private string? author;
+    private List<GetPostResponseDto>? foundPosts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPostsAsync();
+    }
+
+    private async Task LoadPostsAsync()
+    {
+        try
+        {
+            foundPosts = await PostService.GetPostsAsync(author);
+        }
+        catch (Exception e)
+        {
+            foundPosts = new List<GetPostResponseDto>(); 
+        }
+    }
+
+
+}
