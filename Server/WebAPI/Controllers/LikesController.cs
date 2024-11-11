@@ -11,15 +11,13 @@ namespace WebAPI.Controllers;
 public class LikesController : ControllerBase
 {
     private readonly IUserRepository userRepository;
-    private readonly IPostRepository postRepository;
     private readonly ILikeRepository likeRepository;
 
     public LikesController(IUserRepository userRepository,
-        ILikeRepository likeRepository, IPostRepository postRepository)
+        ILikeRepository likeRepository)
     {
         this.userRepository = userRepository;
         this.likeRepository = likeRepository;
-        this.postRepository = postRepository;
     }
 
     [HttpGet]

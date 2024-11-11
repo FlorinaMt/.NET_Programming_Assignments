@@ -9,12 +9,12 @@
 <AuthorizeView>
     <Authorized>
         <h3>Hello, @context.User.Identity.Name</h3>
-        Here you can browse interesting posts.
-
-        <button @onclick='()=>navigationManager.NavigateTo("/Posts")'>Posts</button>
     </Authorized>
     <NotAuthorized>
         You should log in.
-        <button @onclick='()=>navigationManager.NavigateTo("/login")'>Login</button>
     </NotAuthorized>
 </AuthorizeView>
+
+Here you can browse interesting posts.
+
+<button @onclick='() => navigationManager.NavigateTo("/login")'>Go to login</button>
