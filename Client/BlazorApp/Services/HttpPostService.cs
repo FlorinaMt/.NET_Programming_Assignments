@@ -149,7 +149,7 @@ public class HttpPostService : IPostService
         if (!response.IsSuccessStatusCode)
         {
             Console.WriteLine($"Error: {response.StatusCode}, {content}");
-            throw new Exception($"Error: {response.StatusCode}, {content}");
+            throw new Exception($"{response.StatusCode}, {content}");
         }
 
         GetLikeDto receivedDto = JsonSerializer.Deserialize<GetLikeDto>(content,

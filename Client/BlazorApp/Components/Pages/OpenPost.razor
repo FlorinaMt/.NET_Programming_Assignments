@@ -71,6 +71,7 @@ else
     {
         try
         {
+            errorMessage = null;
             if (!string.IsNullOrWhiteSpace(newComment.Body))
             {
                 newComment.UserId = 1;
@@ -80,9 +81,9 @@ else
                 errorMessage = null;
             }
         }
-        catch (HttpRequestException e)
+        catch (Exception e)
         {
-            errorMessage = await ParseApiError(e);
+            errorMessage = e.Message;
         }
     }
 
@@ -90,28 +91,15 @@ else
     {
         try
         {
+            errorMessage = null;
             await PostService.AddLikeAsync(new AddLikeRequestDto { UserId = 1 }, int.Parse(PostId));
             post = await PostService.GetPostAsync(int.Parse(PostId));
             errorMessage = null;
         }
-        catch (HttpRequestException e)
+        catch (Exception e)
         {
-            errorMessage = await ParseApiError(e);
-            throw;
+            errorMessage = e.Message;
         }
-    }
-
-    private async Task<string> ParseApiError(HttpRequestException ex)
-    {
-        if (ex.StatusCode.HasValue && int.Parse(ex.StatusCode.Value)>= 400)
-        {
-            using var responseStream = await ex.Content.ReadAsStreamAsync();
-            var errorResponse = await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(responseStream);
-            if (errorResponse != null && errorResponse.ContainsKey("Error"))
-                return errorResponse["Error"];
-        }
-
-        return "An unexpected error occured.";
     }
 
 }
