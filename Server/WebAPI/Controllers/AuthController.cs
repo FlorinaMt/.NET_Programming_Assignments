@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
         this.userRepository = userRepository;
     }
 
-    [HttpPost("auth/login")]
+    [HttpPost("login")]
     public async Task<ActionResult<AddUserResponseDto>> Login([FromBody] LoginRequest request)
     {
         IQueryable<User> users = userRepository.GetUsers();
@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
         if (user is null)
             return Unauthorized("Username is incorrect");
         
-        if(user.Password != request.Password)
+        if(!user.Password.Equals(request.Password))
             return Unauthorized("Password is incorrect");
         
         AddUserResponseDto sendDto = new AddUserResponseDto{Username = user.Username, UserId = user.UserId};
