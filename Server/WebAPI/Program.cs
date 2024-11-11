@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
 using FileRepositories;
-using LearnWebAPI.Middlewares;
 using Microsoft.OpenApi.Models;
 using RepositoryContracts;
+using WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 

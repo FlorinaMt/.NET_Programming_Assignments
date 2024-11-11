@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
-
-namespace LearnWebAPI.Middlewares
+﻿namespace WebAPI
 {
     public class GlobalExceptionHandlerMiddleware : IMiddleware
     {
@@ -19,19 +12,19 @@ namespace LearnWebAPI.Middlewares
             {
                 Console.WriteLine(ex.StackTrace);
                 context.Response.StatusCode = 400;
-                await context.Response.WriteAsJsonAsync(ex.Message);
+                await context.Response.WriteAsJsonAsync(new {Error = ex.Message});
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine(ex.StackTrace);
                 context.Response.StatusCode = 404;
-                await context.Response.WriteAsJsonAsync(ex.Message);
+                await context.Response.WriteAsJsonAsync(new {Error = ex.Message});
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
                 context.Response.StatusCode = 500;
-                await context.Response.WriteAsJsonAsync(ex.Message);
+                await context.Response.WriteAsJsonAsync(new { Error = ex.Message});
             }
         }
     }
