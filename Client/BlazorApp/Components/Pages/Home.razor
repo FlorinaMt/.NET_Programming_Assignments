@@ -1,7 +1,20 @@
 ﻿@page "/"
 
+@inject NavigationManager navigationManager
+
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Reddit - kind of.</h1>
 
-Welcome to your new app.
+<AuthorizeView>
+    <Authorized>
+        <h3>Hello, @context.User.Identity.Name</h3>
+    </Authorized>
+    <NotAuthorized>
+        You should log in.
+    </NotAuthorized>
+</AuthorizeView>
+
+Here you can browse interesting posts.
+
+<button @onclick='() => navigationManager.NavigateTo("/login")'>Go to login</button>

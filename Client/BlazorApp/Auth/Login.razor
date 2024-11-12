@@ -1,0 +1,57 @@
+﻿@page "/login"
+@using ApiContracts
+@using BlazorApp.Auth
+@using Microsoft.AspNetCore.Components.Authorization
+@using BlazorApp.Components.Blocks
+@using Microsoft.AspNetCore.Components.Forms
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager navigationManager
+<h3>Login</h3>
+
+<AuthorizeView Context="authContext">
+    <NotAuthorized >
+        <h3>
+            Please login!
+        </h3>
+
+        <EditForm Model="@loginRequest" OnValidSubmit="LoginAsync">
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
+
+            <LabelAndInputField Label="Username" Id="username" @bind-Value="loginRequest.Username"/>
+            <LabelAndInputField Label="Password" Id="password" InputType="password" @bind-Value="loginRequest.Password"/>
+
+            <button type="submit" class="btn btn-primary mt-4">Log in</button>
+        </EditForm>
+
+        @if (!string.IsNullOrEmpty(errorLabel))
+        {
+            <div class="alert alert-danger">@errorLabel</div>
+        }
+    </NotAuthorized>
+    <Authorized>
+        <h3>Hello, @authContext.User.Identity.Name</h3>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    private LoginRequest loginRequest = new();
+    private string? errorLabel;
+
+    private async Task LoginAsync()
+    {
+        errorLabel = "";
+        try
+        {
+            await ((SimpleAuthProvider)AuthProvider).Login(loginRequest.Username, loginRequest.Password);
+            navigationManager.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            errorLabel = $"Error: {e.Message}";
+        }
+    }
+
+}

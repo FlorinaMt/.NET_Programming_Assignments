@@ -26,6 +26,7 @@
 }
 
 @code{
+    [Parameter] public int userId { get; set; }
     private CreatePostRequestDto postRequest = new();
     private string? errorMessage, successMessage;
     
@@ -35,9 +36,8 @@
     {
         try
         {
-            ///////////////////////
-            postRequest.UserId = 1;
-            ///////////////////////
+            postRequest.UserId = userId;
+            
             var response = await PostService.CreatePostAsync(postRequest);
             successMessage = $"Post created successfully! Post id: {response.PostId}";
             errorMessage = null;

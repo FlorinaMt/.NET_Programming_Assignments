@@ -167,10 +167,16 @@ public class CommentFileRepository : ICommentRepository
 
     public async Task DeleteCommentAsync(int commentId)
     {
+
         List<Comment> comments = await LoadCommentsAsync();
-        Comment commentToUpdate = await GetCommentByIdAsync(commentId);
-        comments.Remove(commentToUpdate);
+        Comment commentToDelete = await GetCommentByIdAsync(commentId);
+        foreach(Comment comment in comments.ToList())
+        {
+            if (comment.CommentId == commentToDelete.CommentId)
+                comments.Remove(comment);
+        }
         SaveCommentsAsync(comments);
+
     }
 
     public async Task<Comment> GetCommentByIdAsync(int id)

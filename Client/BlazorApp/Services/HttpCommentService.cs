@@ -22,7 +22,6 @@ public class HttpCommentService : ICommentService
 
         if (!response.IsSuccessStatusCode)
         {
-            Console.WriteLine($"Error: {response.StatusCode}, {content}");
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
@@ -48,7 +47,6 @@ public class HttpCommentService : ICommentService
         
         if (!response.IsSuccessStatusCode)
         {
-            Console.WriteLine($"Error: {response.StatusCode}, {content}");
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
@@ -71,7 +69,7 @@ public class HttpCommentService : ICommentService
             {
                 Method = HttpMethod.Delete,
                 Content = stringContent,
-                RequestUri = new Uri($"Comments/{id}")
+               RequestUri = new Uri($"http://localhost:5118/Comments/{id}")
             });
         String content = await response.Content.ReadAsStringAsync();
         
@@ -80,7 +78,6 @@ public class HttpCommentService : ICommentService
             Console.WriteLine($"Error: {response.StatusCode}, {content}");
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
-        
         return Results.NoContent();
     }
 }
