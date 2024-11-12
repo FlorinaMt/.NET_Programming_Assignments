@@ -77,8 +77,9 @@ public class CommentsController : ControllerBase
 
 
     [HttpDelete("{id}")]
-    public async Task<IResult> DeleteCommentAsync(DeleteRequestDto request, [FromRoute] int id)
+    public async Task<IResult> DeleteCommentAsync([FromBody] DeleteRequestDto request, [FromRoute] int id)
     {
+
         Comment comment =
             await commentRepository.GetCommentByIdAsync(request.ItemToDeleteId);
 

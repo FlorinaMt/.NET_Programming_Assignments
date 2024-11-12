@@ -72,6 +72,7 @@ public class PostsController : ControllerBase
 
     private async Task<GetPostResponseDto> GetPostByIdAsync(int postId)
     {
+
         Post post = await postRepository.GetPostByIdAsync(postId);
 
         //extract post's author username
@@ -105,6 +106,7 @@ public class PostsController : ControllerBase
             {
                 CommentId = comment.CommentId,
                 Body = comment.CommentBody, PostId = postId,
+                AuthorId = comment.UserId,
                 AuthorUsername =
                     (await userRepository.GetUserByIdAsync(comment.UserId))
                     .Username
@@ -118,6 +120,7 @@ public class PostsController : ControllerBase
             Likes = likes,
             Comments = comments
         };
+
         return sendDto;
     }
 
