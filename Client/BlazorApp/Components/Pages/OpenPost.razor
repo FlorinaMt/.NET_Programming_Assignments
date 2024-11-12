@@ -1,10 +1,13 @@
 ﻿@page "/posts/{PostId}"
+@attribute [Authorize]
+@using System.Security.Claims
 @using System.Text.Json
 @using ApiContracts
 @using ApiContracts.LikeRelated
 @using BlazorApp.Services
 @inject IPostService PostService;
 
+<AuthorizeView>
 <h3>@post?.Title</h3>
 
 @if (post != null)
@@ -50,9 +53,12 @@ else
 {
     <p>Post not found.</p>
 }
+</AuthorizeView>
 
 @code{
     [Parameter] public string PostId { get; set; }
+    [CascadingParameter] public Task<AuthenticationState>? State { get; set; }
+    private int userId;
 
     private GetPostResponseDto post;
     private CreateCommentRequestDto newComment = new();
@@ -64,7 +70,27 @@ else
     {
         if (int.TryParse(PostId, out int postId))
             post = await PostService.GetPostAsync(postId);
-        else Console.WriteLine("Invalid postId");
+        else Console.WriteLine("Invalid postId"); 
+        
+        await HandleAuthentication();
+    }
+
+    private async Task HandleAuthentication()
+    {
+        if (State is not null)
+        {
+            AuthenticationState authenticationState = await State;
+            ClaimsPrincipal claimsPrincipal = authenticationState.User;
+            if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+            {
+                return;
+            }
+
+            IEnumerable<Claim> claims = claimsPrincipal.Claims;
+            string userIdAsString = claims.Single(c => c.Type.Equals("Id")).Value;
+            
+            userId = int.Parse(userIdAsString);
+        }
     }
 
     private async Task AddComment()
@@ -74,7 +100,7 @@ else
             errorMessage = null;
             if (!string.IsNullOrWhiteSpace(newComment.Body))
             {
-                newComment.UserId = 1;
+                newComment.UserId = userId;
                 await PostService.AddCommentAsync(newComment, int.Parse(PostId));
                 newComment = new CreateCommentRequestDto();
                 post = await PostService.GetPostAsync(int.Parse(PostId));
@@ -92,7 +118,7 @@ else
         try
         {
             errorMessage = null;
-            await PostService.AddLikeAsync(new AddLikeRequestDto { UserId = 1 }, int.Parse(PostId));
+            await PostService.AddLikeAsync(new AddLikeRequestDto { UserId = userId }, int.Parse(PostId));
             post = await PostService.GetPostAsync(int.Parse(PostId));
             errorMessage = null;
         }

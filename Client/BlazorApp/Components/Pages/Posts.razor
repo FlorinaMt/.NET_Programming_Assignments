@@ -1,5 +1,7 @@
 ﻿@page "/Posts"
+@attribute [Authorize]
 
+@using System.Security.Claims
 @using ApiContracts
 @using BlazorApp.Components.Blocks
 @using BlazorApp.Services
@@ -7,7 +9,7 @@
 
 <PageTitle>Posts</PageTitle>
 
-<CreatePost OnPostCreated="LoadPostsAsync" />
+<CreatePost OnPostCreated="LoadPostsAsync" userId="userId"/>
 
 <h3>All posts</h3>
 <div>
@@ -43,11 +45,31 @@ else
     private string? author;
     private List<GetPostResponseDto>? foundPosts = new();
 
+    [CascadingParameter] public Task<AuthenticationState>? State { get; set; }
+    private int userId;
+
     protected override async Task OnInitializedAsync()
     {
+        await HandleAuthentication();
         await LoadPostsAsync();
     }
+    private async Task HandleAuthentication()
+    {
+        if (State is not null)
+        {
+            AuthenticationState authenticationState = await State;
+            ClaimsPrincipal claimsPrincipal = authenticationState.User;
+            if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+            {
+                return;
+            }
 
+            IEnumerable<Claim> claims = claimsPrincipal.Claims;
+            string userIdAsString = claims.Single(c => c.Type.Equals("Id")).Value;
+            
+            userId = int.Parse(userIdAsString);
+        }
+    }
     private async Task LoadPostsAsync()
     {
         try

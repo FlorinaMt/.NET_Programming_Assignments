@@ -12,7 +12,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider
 {
     private readonly HttpClient httpClient;
     private readonly IJSRuntime jsRuntime;
-    private string cachedUserJson;
+    private string? cachedUserJson;
 
     public SimpleAuthProvider(HttpClient httpClient, IJSRuntime jsRuntime)
     {
@@ -49,7 +49,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider
         List<Claim> claims = new List<Claim>()
         {
             new Claim(ClaimTypes.Name, userDto.Username),
-            new Claim(ClaimTypes.NameIdentifier, userDto.UserId.ToString())
+            new Claim("Id", userDto.UserId.ToString())
             //new Claim("DateOfBirth", userDto.DateOfBirth.ToString("yyyy-MM-dd"));
             // new Claim("IsAdmin", userDto.IsAdmin.ToString())
             // new Claim("IsModerator", userDto.IsModerator.ToString())
