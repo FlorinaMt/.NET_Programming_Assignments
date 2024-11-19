@@ -29,9 +29,9 @@ public class LikesController : ControllerBase
             likes.Add(new GetLikeDto
             {
                 LikeId = l.LikeId,
-                Username = (await userRepository.GetUserByIdAsync(l.UserId))
+                Username = (await userRepository.GetUserByIdAsync(l.User.UserId))
                     .Username,
-                PostId = l.PostId
+                PostId = l.Post.PostId
             });
         }
 
@@ -43,7 +43,7 @@ public class LikesController : ControllerBase
     {
         Like like = await likeRepository.GetLikeByIdAsync(id);
 
-        if (like.UserId == request.UserId)
+        if (like.User.UserId == request.UserId)
         {
             await likeRepository.DeleteLikeAsync(like.LikeId);
             return Results.NoContent();

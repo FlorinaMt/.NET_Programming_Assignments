@@ -31,12 +31,12 @@ public class PostsController : ControllerBase
     public async Task<ActionResult<GetPostResponseDto>> CreatePostAsync(
         [FromBody] CreatePostRequestDto request)
     {
-        await userRepository.GetUserByIdAsync(request.UserId);
-        Post post = new()
-        {
-            Title = request.Title, Body = request.Body,
-            UserId = request.UserId
-        };
+        User user = await userRepository.GetUserByIdAsync(request.UserId);
+        Post post = Post.getPost();
+        post.Title = request.Title;
+        post.Body = request.Body;
+        post.User = user;
+
         Post created = await postRepository.AddPostAsync(post);
         return Created($"/Posts", created);
     }
@@ -72,19 +72,20 @@ public class PostsController : ControllerBase
 
     private async Task<GetPostResponseDto> GetPostByIdAsync(int postId)
     {
-
         Post post = await postRepository.GetPostByIdAsync(postId);
 
         //extract post's author username
-        String authorUsername =
-            (await userRepository.GetUserByIdAsync(post.UserId)).Username;
+        String authorUsername = post.User.Username;
+        //(await userRepository.GetUserByIdAsync(post.User)).Username;
 
         //extract the likes
-        List<Like> likesForPost =
-            likeRepository.GetLikesForPost(post.PostId).ToList();
+        List<Like>? likesForPost = post.Likes;
+        //likeRepository.GetLikesForPost(post.PostId).ToList();
 
         //extract the number of likes
-        int likesNo = likesForPost.Count;
+        int likesNo = 0;
+        if (likesForPost != null)
+            likesNo = likesForPost.Count;
 
         //extract the elements as DTOs
         List<GetLikeDto> likes = new();
@@ -93,7 +94,7 @@ public class PostsController : ControllerBase
             likes.Add(new GetLikeDto
             {
                 LikeId = l.LikeId, PostId = post.PostId,
-                Username = (await userRepository.GetUserByIdAsync(l.UserId)).Username
+                Username = l.User.Username
             });
 
 
@@ -106,9 +107,9 @@ public class PostsController : ControllerBase
             {
                 CommentId = comment.CommentId,
                 Body = comment.CommentBody, PostId = postId,
-                AuthorId = comment.UserId,
+                AuthorId = comment.User.UserId,
                 AuthorUsername =
-                    (await userRepository.GetUserByIdAsync(comment.UserId))
+                    (await userRepository.GetUserByIdAsync(comment.User.UserId))
                     .Username
             });
 
@@ -133,13 +134,14 @@ public class PostsController : ControllerBase
         Post post = await postRepository.GetPostByIdAsync(id);
 
         //if this is the author, they can update it
-        if (post.UserId == request.UserId)
+        if (post.User.UserId == request.UserId)
         {
-            Post newPost = new Post
-            {
-                Title = title, Body = body, UserId = request.UserId,
-                PostId = request.ItemToDeleteId
-            };
+            Post newPost = Post.getPost();
+            newPost.Title = title;
+            newPost.Body = body;
+            newPost.User =
+                await userRepository.GetUserByIdAsync(request.UserId);
+            newPost.PostId = request.ItemToDeleteId;
 
             await postRepository.UpdatePostAsync(newPost);
 
@@ -157,8 +159,9 @@ public class PostsController : ControllerBase
     public async Task<IResult> DeletePostAsync(
         [FromBody] DeleteRequestDto request, [FromRoute] int id)
     {
-        Post post = await postRepository.GetPostByIdAsync(request.ItemToDeleteId);
-        if (post.UserId == request.UserId)
+        Post post =
+            await postRepository.GetPostByIdAsync(request.ItemToDeleteId);
+        if (post.User.UserId == request.UserId)
         {
             await postRepository.DeletePostAsync(request.ItemToDeleteId);
             return Results.NoContent();
@@ -176,17 +179,20 @@ public class PostsController : ControllerBase
         await postRepository.GetPostByIdAsync(id);
 
         foreach (Like like in likeRepository.GetLikesForPost(id))
-            if (like.UserId == request.UserId)
+            if (like.User.UserId == request.UserId)
                 throw new ArgumentException("You already liked this post.");
 
-        Like newLike = new Like
-            { UserId = request.UserId, PostId = id };
+        Like newLike = Like.getLike();
+        newLike.User = await userRepository.GetUserByIdAsync(request.UserId);
+        newLike.Post = await postRepository.GetPostByIdAsync(id);
+
         Like addedLike = await likeRepository.AddLikeAsync(newLike);
 
         GetLikeDto created = new GetLikeDto
         {
             LikeId = addedLike.LikeId, PostId = id,
-            Username = (await userRepository.GetUserByIdAsync(addedLike.UserId))
+            Username =
+                (await userRepository.GetUserByIdAsync(addedLike.User.UserId))
                 .Username
         };
         return Created($"/Posts/{id}/Likes", created);
@@ -201,10 +207,10 @@ public class PostsController : ControllerBase
         await userRepository.GetUserByIdAsync(request.UserId);
         await postRepository.GetPostByIdAsync(id);
 
-        Comment newComment = new Comment
-        {
-            CommentBody = request.Body, PostId = id, UserId = request.UserId
-        };
+        Comment newComment = Comment.getComment();
+        newComment.CommentBody = request.Body;
+        newComment.Post = await postRepository.GetPostByIdAsync(id);
+        newComment.User = await userRepository.GetUserByIdAsync(request.UserId);
 
         Comment addedComment =
             await commentRepository.AddCommentAsync(newComment);
@@ -214,7 +220,7 @@ public class PostsController : ControllerBase
             CommentId = addedComment.CommentId, Body = addedComment.CommentBody,
             PostId = id,
             AuthorUsername =
-                (await userRepository.GetUserByIdAsync(addedComment.UserId))
+                (await userRepository.GetUserByIdAsync(addedComment.User.UserId))
                 .Username
         };
 

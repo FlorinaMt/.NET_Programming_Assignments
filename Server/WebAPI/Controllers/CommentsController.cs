@@ -33,8 +33,9 @@ public class CommentsController : ControllerBase
             {
                 CommentId = c.CommentId, Body = c.CommentBody,
                 AuthorUsername =
-                    (await userRepository.GetUserByIdAsync(c.UserId)).Username,
-                PostId = c.PostId
+                    (await userRepository.GetUserByIdAsync(c.User.UserId))
+                    .Username,
+                PostId = c.Post.PostId
             });
         }
 
@@ -51,24 +52,25 @@ public class CommentsController : ControllerBase
 
 
         //if this is the author, they can update it
-        if (comment.UserId == request.UserId)
+        if (comment.User.UserId == request.UserId)
         {
-            Comment newComment = new Comment
-            {
-                CommentBody = request.Body, CommentId = comment.CommentId,
-                PostId = comment.PostId, UserId = comment.UserId
-            };
-            
+            Comment newComment = Comment.getComment();
+            newComment.CommentBody = request.Body;
+            newComment.CommentId = comment.CommentId;
+            newComment.Post = comment.Post;
+            newComment.User = comment.User;
+
             await commentRepository.UpdateCommentAsync(newComment);
 
             GetCommentResponseDto updatedComment = new GetCommentResponseDto
             {
                 CommentId = newComment.CommentId, Body = newComment.CommentBody,
                 AuthorUsername =
-                    (await userRepository.GetUserByIdAsync(newComment.UserId))
-                    .Username, PostId = newComment.PostId
+                    (await userRepository.GetUserByIdAsync(newComment.User.UserId))
+                    .Username,
+                PostId = newComment.Post.PostId
             };
-            
+
             return Ok(updatedComment);
         }
 
@@ -77,13 +79,13 @@ public class CommentsController : ControllerBase
 
 
     [HttpDelete("{id}")]
-    public async Task<IResult> DeleteCommentAsync([FromBody] DeleteRequestDto request, [FromRoute] int id)
+    public async Task<IResult> DeleteCommentAsync(
+        [FromBody] DeleteRequestDto request, [FromRoute] int id)
     {
-
         Comment comment =
             await commentRepository.GetCommentByIdAsync(request.ItemToDeleteId);
 
-        if (comment.UserId == request.UserId)
+        if (comment.User.UserId == request.UserId)
         {
             await commentRepository.DeleteCommentAsync(comment.CommentId);
             return Results.NoContent();

@@ -28,19 +28,20 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<AddUserResponseDto>> AddUserAsync(
         [FromBody] AddUserRequestDto request)
     {
-        Console.WriteLine("Username" + request.Username + "   " + request.Password);
+        Console.WriteLine("Username" + request.Username + "   " +
+                          request.Password);
         if (await userRepository.IsUsernameValidAsync(request.Username))
         {
-            User user = new User
-            {
-                Username = request.Username, Password = request.Password
-            };
+
+            User user = Entities.User.GetUser();
+            user.Username = request.Username;
+            user.Password = request.Password;
+
             User created = await userRepository.AddUserAsync(user);
 
             AddUserResponseDto dtoSend = new()
                 { UserId = created.UserId, Username = created.Username };
             return Created($"/Users", dtoSend);
-
         }
 
         return BadRequest("Username is invalid.");
@@ -90,11 +91,11 @@ public class UsersController : ControllerBase
 
         if (await userRepository.IsUsernameValidAsync(request.Username))
         {
-            User user = new User
-            {
-                UserId = request.UserId, Username = request.Username,
-                Password = request.Password
-            };
+            User user = Entities.User.GetUser();
+            user.UserId = request.UserId;
+            user.Username = request.Username;
+            user.Password = request.Password;
+
             await userRepository.UpdateUserAsync(user);
             AddUserResponseDto sendDto = new()
                 { UserId = user.UserId, Username = user.Username };
@@ -107,8 +108,6 @@ public class UsersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IResult> DeleteUserAsync([FromRoute] int id)
     {
-        //check for the username and password together
-
         await userRepository.DeleteUserAsync(id);
         return Results.NoContent();
     }
