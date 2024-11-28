@@ -57,7 +57,7 @@ public class LikeFileRepository : ILikeRepository
     public async Task<Like> AddLikeAsync(Like like)
     {
         List<Like> likes = await LoadLikesAsync();
-        if (!likes.Any(l => l.UserId == like.UserId && l.PostId == like.PostId))
+        if (!likes.Any(l => l.User == like.User && l.Post == like.Post))
         {
             int maxId = likes.Count > 0 ? likes.Max(like => like.LikeId) : 0;
             like.LikeId = maxId + 1;
@@ -89,7 +89,7 @@ public class LikeFileRepository : ILikeRepository
     {
         List<Like> likes = LoadLikesAsync().Result;
         List<Like> likesForPost =
-            likes.Where(like => like.PostId == postId).ToList();
+            likes.Where(like => like.Post == postId).ToList();
 
         return likesForPost.AsQueryable();
     }

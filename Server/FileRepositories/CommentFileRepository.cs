@@ -193,7 +193,7 @@ public class CommentFileRepository : ICommentRepository
         List<Comment> comments = LoadCommentsAsync().Result;
 
         List<Comment> foundComments =
-            comments.FindAll(c => c.PostId == postId);
+            comments.FindAll(c => c.Post == postId);
         return foundComments.AsQueryable();
     }
 

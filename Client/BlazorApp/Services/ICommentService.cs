@@ -7,5 +7,5 @@ public interface ICommentService
 {
     public Task<List<GetCommentResponseDto>> GetCommentsAsync();
     public Task <GetCommentResponseDto> ReplaceCommentAsync (ReplaceCommentRequestDto request, int id);
-    public Task<IResult> DeleteCommentAsync(DeleteRequestDto request, int id);
+    public Task<IResult> DeleteCommentAsync(int id);
 }
