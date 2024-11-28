@@ -59,18 +59,9 @@ public class HttpCommentService : ICommentService
         return receivedDto;
     }
 
-    public async Task<IResult> DeleteCommentAsync(DeleteRequestDto request, int id)
+    public async Task<IResult> DeleteCommentAsync(int id)
     {
-        string requestJson = JsonSerializer.Serialize(request);
-        StringContent stringContent=new StringContent(requestJson, Encoding.UTF8, "application/json");
-
-        HttpResponseMessage response = await client.SendAsync(
-            new HttpRequestMessage
-            {
-                Method = HttpMethod.Delete,
-                Content = stringContent,
-               RequestUri = new Uri($"http://localhost:5118/Comments/{id}")
-            });
+        HttpResponseMessage response = await client.DeleteAsync($"Comments/{id}");
         String content = await response.Content.ReadAsStringAsync();
         
         if (!response.IsSuccessStatusCode)
