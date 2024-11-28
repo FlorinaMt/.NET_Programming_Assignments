@@ -2,6 +2,7 @@
 using ApiContracts.LikeRelated;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -24,12 +25,13 @@ public class LikesController : ControllerBase
     public async Task<ActionResult<List<GetLikeDto>>> GetLikesAsync()
     {
         List<GetLikeDto> likes = new List<GetLikeDto>();
-        foreach (Like l in likeRepository.GetAllLikes())
+        foreach (Like l in await likeRepository.GetAllLikes().ToListAsync())
         {
             likes.Add(new GetLikeDto
             {
                 LikeId = l.LikeId,
-                Username = (await userRepository.GetUserByIdAsync(l.User.UserId))
+                Username =
+                    (await userRepository.GetUserByIdAsync(l.User.UserId))
                     .Username,
                 PostId = l.Post.PostId
             });
@@ -39,16 +41,11 @@ public class LikesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request, [FromRoute] int id)
+    public async Task<IResult> DeleteLikeAsync([FromRoute] int id)
     {
         Like like = await likeRepository.GetLikeByIdAsync(id);
 
-        if (like.User.UserId == request.UserId)
-        {
-            await likeRepository.DeleteLikeAsync(like.LikeId);
-            return Results.NoContent();
-        }
-
-        throw new ArgumentException("No like added for this post.");
+        await likeRepository.DeleteLikeAsync(like.LikeId);
+        return Results.NoContent();
     }
 }

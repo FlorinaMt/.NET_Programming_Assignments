@@ -2,6 +2,7 @@
 using Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -30,18 +31,17 @@ public class UsersController : ControllerBase
     {
         Console.WriteLine("Username" + request.Username + "   " +
                           request.Password);
-        if (await userRepository.IsUsernameValidAsync(request.Username))
+        if (!await userRepository.GetUsers().AnyAsync(u=>u.Username==request.Username))
         {
-
             User user = Entities.User.GetUser();
             user.Username = request.Username;
             user.Password = request.Password;
 
             User created = await userRepository.AddUserAsync(user);
 
-            AddUserResponseDto dtoSend = new()
+            AddUserResponseDto sendDto = new()
                 { UserId = created.UserId, Username = created.Username };
-            return Created($"/Users", dtoSend);
+            return Created($"/Users", sendDto);
         }
 
         return BadRequest("Username is invalid.");
@@ -55,7 +55,7 @@ public class UsersController : ControllerBase
         try
         {
             AddUserResponseDto sendDto = new AddUserResponseDto
-                { UserId = id, Username = user.Username };
+                { UserId = user.UserId, Username = user.Username };
             return Created($"/Users/{id}", sendDto);
         }
         catch (Exception e)
@@ -65,31 +65,23 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IResult> GetAllUsersAsync(
-        [FromQuery] string? nameContains)
+    public async Task<ActionResult<IEnumerable<User>>>
+        GetAllUsersAsync(
+            [FromQuery] string? nameContains = null)
     {
-        List<string> usernames = new List<string>();
-
-        for (int i = 0; i < userRepository.GetUsers().Count(); i++)
-            usernames.Add(userRepository.GetUsers().ElementAt(i).Username);
-
-        if (!string.IsNullOrWhiteSpace(nameContains))
-            usernames = usernames
-                .Where(u => u.ToLower().Contains(nameContains.Trim().ToLower()))
-                .ToList();
-
-        if (usernames.Count == 0)
-            return Results.Ok("No users found.");
-        return Results.Ok(usernames);
+        IList<User> users = await userRepository.GetUsers().Where(u =>
+            nameContains == null || u.Username.ToLower().Trim()
+                .Contains(nameContains.ToLower().Trim())).ToListAsync();
+        
+        return Ok(users);
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult<AddUserResponseDto>> ReplaceUserAsync(
         [FromBody] ReplaceUserRequestDto request, [FromRoute] int id)
     {
-        //check the username and password together? 
 
-        if (await userRepository.IsUsernameValidAsync(request.Username))
+        if (!await userRepository.GetUsers().AnyAsync(u=>u.Username==request.Username))
         {
             User user = Entities.User.GetUser();
             user.UserId = request.UserId;

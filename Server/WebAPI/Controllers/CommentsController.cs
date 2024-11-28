@@ -2,6 +2,7 @@
 using ApiContracts.LikeRelated;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -27,14 +28,13 @@ public class CommentsController : ControllerBase
     {
         List<GetCommentResponseDto>
             comments = new List<GetCommentResponseDto>();
-        foreach (Comment c in commentRepository.GetAllComments())
+        foreach (Comment c in await commentRepository.GetAllComments()
+                     .ToListAsync())
         {
             comments.Add(new GetCommentResponseDto
             {
                 CommentId = c.CommentId, Body = c.CommentBody,
-                AuthorUsername =
-                    (await userRepository.GetUserByIdAsync(c.User.UserId))
-                    .Username,
+                AuthorUsername = c.User.Username,
                 PostId = c.Post.PostId
             });
         }
@@ -65,9 +65,7 @@ public class CommentsController : ControllerBase
             GetCommentResponseDto updatedComment = new GetCommentResponseDto
             {
                 CommentId = newComment.CommentId, Body = newComment.CommentBody,
-                AuthorUsername =
-                    (await userRepository.GetUserByIdAsync(newComment.User.UserId))
-                    .Username,
+                AuthorUsername = newComment.User.Username,
                 PostId = newComment.Post.PostId
             };
 
@@ -79,18 +77,12 @@ public class CommentsController : ControllerBase
 
 
     [HttpDelete("{id}")]
-    public async Task<IResult> DeleteCommentAsync(
-        [FromBody] DeleteRequestDto request, [FromRoute] int id)
+    public async Task<IResult> DeleteCommentAsync([FromRoute] int id)
     {
         Comment comment =
-            await commentRepository.GetCommentByIdAsync(request.ItemToDeleteId);
+            await commentRepository.GetCommentByIdAsync(id);
 
-        if (comment.User.UserId == request.UserId)
-        {
-            await commentRepository.DeleteCommentAsync(comment.CommentId);
-            return Results.NoContent();
-        }
-
-        throw new ArgumentException("No comment added for this post.");
+        await commentRepository.DeleteCommentAsync(comment.CommentId);
+        return Results.NoContent();
     }
 }

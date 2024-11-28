@@ -1,6 +1,7 @@
 ﻿using ApiContracts;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -19,9 +20,9 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<AddUserResponseDto>> Login([FromBody] LoginRequest request)
     {
-        IQueryable<User> users = userRepository.GetUsers();
+        IList<User> users = await userRepository.GetUsers().ToListAsync();
         
-        User user = users.SingleOrDefault(u => u.Username == request.Username);
+        User? user = users.SingleOrDefault(u => u.Username == request.Username);
 
         if (user is null)
             return Unauthorized("Username is incorrect");
