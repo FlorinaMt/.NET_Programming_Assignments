@@ -13,6 +13,6 @@ public class AppContext : DbContext
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("Data Source=best_app.db");
+        optionsBuilder.UseSqlite(@"Data Source=..\EfcRepositories\best_app.db");
     }
 }
