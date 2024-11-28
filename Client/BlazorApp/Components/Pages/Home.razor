@@ -1,6 +1,6 @@
 ﻿@page "/"
 
-@inject NavigationManager navigationManager
+@inject NavigationManager NavigationManager
 
 <PageTitle>Home</PageTitle>
 
@@ -17,4 +17,4 @@
 
 Here you can browse interesting posts.
 
-<button @onclick='() => navigationManager.NavigateTo("/login")'>Go to login</button>
+<button @onclick='() => NavigationManager.NavigateTo("/login")'>Go to login</button>
