@@ -45,8 +45,10 @@ public class EfcPostRepository : IPostRepository
 
     public async Task<Post> GetPostByIdAsync(int postId)
     {
-        Post? post=await context.Posts.SingleOrDefaultAsync(p=>p.PostId== postId);
-        if(post is null)
+        Post? post = await context.Posts.Include(p => p.User)
+            .Include(p => p.Comments).Include(p => p.Likes)
+            .SingleOrDefaultAsync(p => p.PostId == postId);
+        if (post is null)
             throw new ArgumentException(
                 $"Post with ID {postId} not found");
         return post;
@@ -54,6 +56,7 @@ public class EfcPostRepository : IPostRepository
 
     public IQueryable<Post> GetPosts()
     {
-        return context.Posts.AsQueryable();
+        return context.Posts.Include(p => p.User).Include(p => p.Likes)
+            .Include(p => p.Comments).AsQueryable();
     }
 }
