@@ -85,46 +85,46 @@ public class HttpPostService : IPostService
         return receivedDto;
     }
 
-    public async Task<GetPostResponseDto> ReplacePostAsync(
-        DeleteRequestDto request, string? title, string? body, int id)
+    public async Task<GetPostResponseDto> ReplacePostAsync(string? title,
+        string? body, int id)
     {
-        string requestJson = JsonSerializer.Serialize(request);
-        StringContent content = new StringContent(requestJson, Encoding.UTF8,
-            "application/json");
+        // Construct the query parameters string
+        var queryParameters = new List<string>();
+        if (!string.IsNullOrWhiteSpace(title))
+            queryParameters.Add($"title={Uri.EscapeDataString(title)}");
+        if (!string.IsNullOrWhiteSpace(body))
+            queryParameters.Add($"body={Uri.EscapeDataString(body)}");
+        string queryString = string.Join("&", queryParameters);
 
-        HttpResponseMessage response =
-            await client.PutAsync($"Posts/{id}", content);
-        String responseContent = await response.Content.ReadAsStringAsync();
+        string requestUrl = $"Posts/{id}";
+        if (!string.IsNullOrWhiteSpace(queryString))
+            requestUrl += $"?{queryString}";
+
+        HttpResponseMessage response = await client.PutAsync(requestUrl, null);
+        string responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
         {
-            Console.WriteLine($"Error: {response.StatusCode}, {content}");
-            throw new Exception($"Error: {response.StatusCode}, {content}");
+            Console.WriteLine(
+                $"Error: {response.StatusCode}, {responseContent}");
+            throw new Exception(
+                $"Error: {response.StatusCode}, {responseContent}");
         }
 
+        // Deserialize and return the response
         GetPostResponseDto receivedDto =
-            JsonSerializer.Deserialize<GetPostResponseDto>(responseContent,
-                new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                })!;
+            JsonSerializer.Deserialize<GetPostResponseDto>(
+                responseContent,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            )!;
+
         return receivedDto;
     }
+    
 
-    public async Task<IResult> DeletePostAsync(DeleteRequestDto request, int id)
+    public async Task<IResult> DeletePostAsync(int id)
     {
-        string requestJson = JsonSerializer.Serialize(request);
-        StringContent stringContent = new StringContent(requestJson,
-            Encoding.UTF8, "application/json");
-        
-        HttpResponseMessage response = await client.SendAsync(
-            new HttpRequestMessage
-            {
-                Method = HttpMethod.Delete,
-                RequestUri = new Uri(client.BaseAddress,
-                    $"/Posts/{id}"),
-                Content = stringContent
-            });
+        HttpResponseMessage response = await client.DeleteAsync($"/Posts/{id}");
         String content = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
@@ -140,12 +140,13 @@ public class HttpPostService : IPostService
         AddLikeRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
-        StringContent stringContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+        StringContent stringContent = new StringContent(requestJson,
+            Encoding.UTF8, "application/json");
 
         HttpResponseMessage response =
             await client.PostAsync($"Posts/{id}/Likes", stringContent);
         string content = await response.Content.ReadAsStringAsync();
-        
+
         if (!response.IsSuccessStatusCode)
         {
             Console.WriteLine($"Error: {response.StatusCode}, {content}");
@@ -165,23 +166,25 @@ public class HttpPostService : IPostService
         CreateCommentRequestDto request, int id)
     {
         string requestJson = JsonSerializer.Serialize(request);
-        StringContent stringContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+        StringContent stringContent = new StringContent(requestJson,
+            Encoding.UTF8, "application/json");
 
         HttpResponseMessage response =
             await client.PostAsync($"Posts/{id}/Comments", stringContent);
         string content = await response.Content.ReadAsStringAsync();
-        
+
         if (!response.IsSuccessStatusCode)
         {
             Console.WriteLine($"Error: {response.StatusCode}, {content}");
             throw new Exception($"Error: {response.StatusCode}, {content}");
         }
 
-        GetCommentResponseDto receivedDto = JsonSerializer.Deserialize<GetCommentResponseDto>(content,
-            new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            })!;
+        GetCommentResponseDto receivedDto =
+            JsonSerializer.Deserialize<GetCommentResponseDto>(content,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                })!;
 
         return receivedDto;
     }

@@ -2,6 +2,7 @@
 using ApiContracts.LikeRelated;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -27,14 +28,14 @@ public class CommentsController : ControllerBase
     {
         List<GetCommentResponseDto>
             comments = new List<GetCommentResponseDto>();
-        foreach (Comment c in commentRepository.GetAllComments())
+        foreach (Comment c in await commentRepository.GetAllComments()
+                     .ToListAsync())
         {
             comments.Add(new GetCommentResponseDto
             {
                 CommentId = c.CommentId, Body = c.CommentBody,
-                AuthorUsername =
-                    (await userRepository.GetUserByIdAsync(c.UserId)).Username,
-                PostId = c.PostId
+                AuthorUsername = c.User.Username,
+                PostId = c.Post.PostId
             });
         }
 
@@ -51,24 +52,23 @@ public class CommentsController : ControllerBase
 
 
         //if this is the author, they can update it
-        if (comment.UserId == request.UserId)
+        if (comment.User.UserId == request.UserId)
         {
-            Comment newComment = new Comment
-            {
-                CommentBody = request.Body, CommentId = comment.CommentId,
-                PostId = comment.PostId, UserId = comment.UserId
-            };
-            
+            Comment newComment = Comment.getComment();
+            newComment.CommentBody = request.Body;
+            newComment.CommentId = comment.CommentId;
+            newComment.Post = comment.Post;
+            newComment.User = comment.User;
+
             await commentRepository.UpdateCommentAsync(newComment);
 
             GetCommentResponseDto updatedComment = new GetCommentResponseDto
             {
                 CommentId = newComment.CommentId, Body = newComment.CommentBody,
-                AuthorUsername =
-                    (await userRepository.GetUserByIdAsync(newComment.UserId))
-                    .Username, PostId = newComment.PostId
+                AuthorUsername = newComment.User.Username,
+                PostId = newComment.Post.PostId
             };
-            
+
             return Ok(updatedComment);
         }
 
@@ -77,18 +77,12 @@ public class CommentsController : ControllerBase
 
 
     [HttpDelete("{id}")]
-    public async Task<IResult> DeleteCommentAsync([FromBody] DeleteRequestDto request, [FromRoute] int id)
+    public async Task<IResult> DeleteCommentAsync([FromRoute] int id)
     {
-
         Comment comment =
-            await commentRepository.GetCommentByIdAsync(request.ItemToDeleteId);
+            await commentRepository.GetCommentByIdAsync(id);
 
-        if (comment.UserId == request.UserId)
-        {
-            await commentRepository.DeleteCommentAsync(comment.CommentId);
-            return Results.NoContent();
-        }
-
-        throw new ArgumentException("No comment added for this post.");
+        await commentRepository.DeleteCommentAsync(comment.CommentId);
+        return Results.NoContent();
     }
 }

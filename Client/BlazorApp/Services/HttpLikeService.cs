@@ -37,20 +37,16 @@ public class HttpLikeService : ILikeService
         return receivedDto;
     }
 
-    public async Task<IResult> DeleteLikeAsync(DeleteRequestDto request, int id)
+    public async Task<IResult> DeleteLikeAsync(int id)
     {
-        string requestJson = JsonSerializer.Serialize(request);
-        StringContent requestContent = new StringContent(requestJson,
-            Encoding.UTF8, "application/json");
-
-        HttpResponseMessage response = await client.SendAsync(
-            new HttpRequestMessage
-            {
-                Method = HttpMethod.Delete, Content = requestContent,
-                RequestUri = new Uri($"Likes/{id}")
-            });
+        HttpResponseMessage response = await client.DeleteAsync($"Likes/{id}");
         string content = await response.Content.ReadAsStringAsync();
-
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Error: {response.StatusCode}, {content}");
+            throw new Exception($"Error: {response.StatusCode}, {content}");
+        }
         return Results.NoContent();
     }
 }

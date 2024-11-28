@@ -137,7 +137,7 @@ else
         try
         {
             errorMessage = null;
-            await CommentService.DeleteCommentAsync(new DeleteRequestDto{ItemToDeleteId = commentId, UserId = userId}, commentId);
+            await CommentService.DeleteCommentAsync(commentId);
             post = await PostService.GetPostAsync(int.Parse(PostId));
         }
         catch (Exception e)

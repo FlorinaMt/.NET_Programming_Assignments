@@ -1,11 +1,22 @@
-﻿namespace Entities;
+﻿using System.Diagnostics;
+
+namespace Entities;
 
 public class Comment
 {
     public int CommentId { get; set; }
-    public int UserId { get; set; }
-    public int PostId { get; set; }
+    public User User { get; set; } = null!;
+    public Post Post { get; set; } = null!;
     private string? commentBody;
+
+    private Comment()
+    {
+        
+    }
+    public static Comment getComment()
+    {
+        return new Comment();
+    }
 
     public string CommentBody
     {
@@ -18,12 +29,14 @@ public class Comment
         }
     }
 
+
+
     public override bool Equals(object? obj)
     {
         if (obj is null)
             return false;
         Comment other=(Comment)obj;
-        if (other.CommentBody.Equals(commentBody) && other.UserId==UserId && other.PostId==PostId && other.CommentId==CommentId)
+        if (other.CommentBody.Equals(commentBody) && other.User==User && other.Post==Post && other.CommentId==CommentId)
             return true;
         return false;
     }

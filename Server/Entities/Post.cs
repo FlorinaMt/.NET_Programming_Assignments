@@ -3,15 +3,23 @@
 public class Post
 {
     public int PostId { get; set; }
-    public int UserId { get; set; }
+    public User User { get; set; } = null!;
     private string? title, body;
+    public List<Comment>? Comments { get; set; }
+    public List<Like>? Likes { get; set; }
+
+    private Post()
+    {
+    }
+
+    public static Post getPost()
+    {
+        return new Post();
+    }
 
     public string Title
     {
-        get
-        {
-            return title;
-        }
+        get { return title; }
         set
         {
             if (value is null || value.Trim().Equals(""))
@@ -20,7 +28,8 @@ public class Post
         }
     }
 
-    public string Body {
+    public string Body
+    {
         get => body;
         set
         {
@@ -29,15 +38,16 @@ public class Post
             body = value;
         }
     }
-    
+
+
     public override bool Equals(object? obj)
     {
         if (obj is null)
             return false;
-        Post other=(Post)obj;
-        if (other.UserId==UserId && other.Title.Equals(Title) && other.Body.Equals(Body) && other.PostId==PostId)
+        Post other = (Post)obj;
+        if (other.User == User && other.Title.Equals(Title) &&
+            other.Body.Equals(Body) && other.PostId == PostId)
             return true;
         return false;
     }
-  
 }

@@ -1,8 +1,9 @@
 using System.Runtime.CompilerServices;
-using FileRepositories;
+using EfcRepositories;
 using Microsoft.OpenApi.Models;
 using RepositoryContracts;
 using WebAPI;
+using AppContext = EfcRepositories.AppContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +20,11 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
-builder.Services.AddScoped<IPostRepository, PostFileRepository>();
-builder.Services.AddScoped<IUserRepository, UserFileRepository>();
-builder.Services.AddScoped<ICommentRepository, CommentFileRepository>();
-builder.Services.AddScoped<ILikeRepository, LikeFileRepository>();
+builder.Services.AddScoped<IPostRepository, EfcPostRepository>();
+builder.Services.AddScoped<IUserRepository, EfcUserRepository>();
+builder.Services.AddScoped<ICommentRepository, EfcCommentRepository>();
+builder.Services.AddScoped<ILikeRepository, EfcLikeRepository>();
+builder.Services.AddDbContext<AppContext>();
 
 var app = builder.Build();
 
